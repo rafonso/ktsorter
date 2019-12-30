@@ -2,6 +2,7 @@ package rafael.ktsorter.views
 
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
+import javafx.scene.Group
 import javafx.scene.canvas.Canvas
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
@@ -9,13 +10,14 @@ import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
 import rafael.ktsorter.Styles
+import rafael.ktsorter.numbergenerator.NumberGenerator
 import tornadofx.*
 
 class MainView : View("KTSorter") {
 
     private lateinit var pnlControls: Pane
     private lateinit var cmbQuantity: ComboBox<Int>
-    private lateinit var cmbSequenceType: ComboBox<String>
+    private lateinit var cmbSequenceType: ComboBox<NumberGenerator>
     private lateinit var cmbExihibitionType: ComboBox<String>
     private lateinit var cmbSortingType: ComboBox<String>
     private lateinit var cmbIntervalCycles: ComboBox<Int>
@@ -26,7 +28,9 @@ class MainView : View("KTSorter") {
     private lateinit var txfComparsions: TextField
     private lateinit var txfSwaps: TextField
     private lateinit var txfTime: TextField
+    @Deprecated(message="")
     private lateinit var canvas: Canvas
+    private lateinit var sortGroup: Group
 
     init {
         super.primaryStage.isResizable = false
@@ -51,14 +55,7 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbSequenceType = combobox {
-                                items = FXCollections.observableArrayList(
-                                    "Random",
-                                    "Unique",
-                                    "Crescent",
-                                    "Decrescent",
-                                    "4 Values",
-                                    "Semi sorted"
-                                )
+                                items = NumberGenerator.values().toList().observable()
                                 value = items[0]
                             }
                             label.labelFor = cmbSequenceType
@@ -110,6 +107,10 @@ class MainView : View("KTSorter") {
                     btnGenerateNumbers = button {
                         text = "Generate Number"
                         addClass(Styles.buttons)
+                        action {
+                            val values = cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!)
+                            println(values.joinToString(separator = " ") { i -> "%3d".format(i) })
+                        }
                     }
                     btnSort = button {
                         text = "Sort"
@@ -155,12 +156,8 @@ class MainView : View("KTSorter") {
             }
         }
         center {
-            group {
+            sortGroup = group {
                 addClass(Styles.canvases)
-                canvas = canvas {
-                }
-                canvas.height = height
-                canvas.width = width
             }
         }
     }
