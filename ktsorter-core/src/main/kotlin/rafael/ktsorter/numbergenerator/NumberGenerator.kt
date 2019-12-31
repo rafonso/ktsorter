@@ -33,7 +33,7 @@ enum class NumberGenerator(val description: String) {
     SINGLE("Single") {
         override fun generate(n: Int): IntArray {
             val value = Random.nextInt(n) + 1
-            return List(n) { _ -> value }.toIntArray()
+            return List(n) { value }.toIntArray()
         }
     },
     /**
@@ -43,7 +43,7 @@ enum class NumberGenerator(val description: String) {
 
         private fun getValue(delta: Int, pos: Int): List<Int> {
             val value = (delta * (pos + Random.nextDouble())).toInt()
-            return List(delta) { _ -> value }
+            return List(delta) { value }
         }
 
         private tailrec fun normalize(values: MutableList<List<Int>>, quantity: Int, i: Int): List<Int> {

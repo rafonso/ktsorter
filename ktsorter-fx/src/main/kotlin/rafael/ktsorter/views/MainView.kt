@@ -2,8 +2,6 @@ package rafael.ktsorter.views
 
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
-import javafx.scene.Group
-import javafx.scene.canvas.Canvas
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
@@ -11,12 +9,15 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
 import rafael.ktsorter.Styles
 import rafael.ktsorter.numbergenerator.NumberGenerator
+import rafael.ktsorter.views.plot.Limits
+import rafael.ktsorter.views.plot.Plotter
+import rafael.ktsorter.views.plot.limitsValues
 import tornadofx.*
 
 class MainView : View("KTSorter") {
 
     private lateinit var pnlControls: Pane
-    private lateinit var cmbQuantity: ComboBox<Int>
+    private lateinit var cmbQuantity: ComboBox<Limits>
     private lateinit var cmbSequenceType: ComboBox<NumberGenerator>
     private lateinit var cmbExihibitionType: ComboBox<String>
     private lateinit var cmbSortingType: ComboBox<String>
@@ -28,9 +29,8 @@ class MainView : View("KTSorter") {
     private lateinit var txfComparsions: TextField
     private lateinit var txfSwaps: TextField
     private lateinit var txfTime: TextField
-    @Deprecated(message="")
-    private lateinit var canvas: Canvas
-    private lateinit var sortGroup: Group
+    private lateinit var sortPane: Pane
+    private lateinit var plotter: Plotter
 
     init {
         super.primaryStage.isResizable = false
@@ -46,8 +46,9 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbQuantity = combobox {
-                                items = FXCollections.observableArrayList(5, 10, 20, 50, 100, 200, 500, 1000)
-                                value = 50
+                                items = FXCollections.observableArrayList(limitsValues)
+                                value = limitsValues.find { it.quantity == 50 }
+                                converter = LimitsConverter()
                             }
                             label.labelFor = cmbQuantity
                         }
@@ -108,8 +109,12 @@ class MainView : View("KTSorter") {
                         text = "Generate Number"
                         addClass(Styles.buttons)
                         action {
-                            val values = cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!)
-                            println(values.joinToString(separator = " ") { i -> "%3d".format(i) })
+                            //                            val values = cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!)
+                            plotter = Plotter(
+                                sortPane,
+                                cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!.quantity),
+                                cmbQuantity.value
+                            )
                         }
                     }
                     btnSort = button {
@@ -156,9 +161,10 @@ class MainView : View("KTSorter") {
             }
         }
         center {
-            sortGroup = group {
+            sortPane = pane {
                 addClass(Styles.canvases)
             }
         }
     }
 }
+

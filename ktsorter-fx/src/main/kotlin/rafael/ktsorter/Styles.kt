@@ -24,7 +24,6 @@ class Styles : Stylesheet() {
             prefHeight = 600.px
             prefWidth = 1280.px
             padding = box(10.px)
-//            backgroundColor += LinearGradient(0.0, 0.0, 0.0, 1.0, true, CycleMethod.NO_CYCLE, Stop(0.0, c("#028aff")), Stop(1.0, c("#003780")))
             pad {
                 box(10.px)
             }
