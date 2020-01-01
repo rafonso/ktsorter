@@ -2,9 +2,10 @@ package rafael.ktsorter.views.plot
 
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
+import tornadofx.add
 import tornadofx.getChildList
 
-abstract class Plotter(protected val region: Region, initialValues: IntArray, protected val limits: Limits) {
+abstract class Plotter(private val region: Region, initialValues: IntArray, protected val limits: Limits) {
 
     protected val colors = ColorManager.getColors(limits.quantity)
 
@@ -13,14 +14,20 @@ abstract class Plotter(protected val region: Region, initialValues: IntArray, pr
     protected fun yToRegion(y: Int): Double = (limits.quantity - y) * region.height / limits.quantity
 
     init {
+        this.initPlotter()
         this.plot(initialValues)
     }
 
-    protected abstract fun plotValues(values: IntArray)
+    protected abstract fun initPlotter()
+
+    protected abstract fun plotValues(values: IntArray): Iterable<Shape>
 
     private fun plot(values: IntArray) {
         region.getChildList()?.removeIf { n -> n is Shape }
-        plotValues(values)
+
+        val shapes = plotValues(values)
+        shapes.forEach(region::add)
+
     }
 
 }
