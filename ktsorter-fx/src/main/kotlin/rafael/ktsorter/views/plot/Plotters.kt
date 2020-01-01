@@ -12,6 +12,10 @@ enum class Plotters(override val description: String) : Descriptable {
     SCATTER("Scatter") {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             ScatterPlotter(region, initialValues, limits)
+    },
+    RADIAL_SCATTER("Radial Scatter") {
+        override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
+            RadialScatterPlotter(region, initialValues, limits)
     }
     ;
 

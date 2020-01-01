@@ -5,7 +5,7 @@ import javafx.scene.shape.Shape
 import tornadofx.add
 import tornadofx.getChildList
 
-abstract class Plotter(private val region: Region, initialValues: IntArray, protected val limits: Limits) {
+abstract class Plotter(protected val region: Region, initialValues: IntArray, protected val limits: Limits) {
 
     protected val colors = ColorManager.getColors(limits.quantity)
 
