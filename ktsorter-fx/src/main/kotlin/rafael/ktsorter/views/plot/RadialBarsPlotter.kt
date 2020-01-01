@@ -2,13 +2,11 @@ package rafael.ktsorter.views.plot
 
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
-import javafx.scene.shape.Circle
+import javafx.scene.shape.Line
 import javafx.scene.shape.Shape
 import kotlin.math.*
 
-const val ellipseFactor = 0.95
-
-class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limits) :
+class RadialBarsPlotter(region: Region, initialValues: IntArray, limits: Limits) :
     Plotter(region, initialValues, limits) {
 
     private lateinit var centerRegion: CartesianCoordinate
@@ -25,10 +23,10 @@ class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limi
         return Pair(PolarCoordinate(valueRadius, theta), colors[value - 1])
     }
 
-    private fun toCircle(coordinate: CartesianCoordinate, color: Color) =
-        Circle(coordinate.x, coordinate.y, limits.radius, color).also { c ->
-            c.stroke = Color.BLACK
-            c.strokeWidth = limits.radius / 4
+    private fun toLine(coordinate: CartesianCoordinate, color: Color) =
+        Line(centerRegion.x, centerRegion.y, coordinate.x, coordinate.y).also { c ->
+            c.stroke = color
+            c.strokeWidth = limits.radius
         }
 
     override fun initPlotter() {
@@ -42,6 +40,6 @@ class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limi
             .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
             .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }
             .map { (coord, color) -> Pair(coord + centerRegion, color) }
-            .map { (coord, color) -> this.toCircle(coord, color) }
+            .map { (coord, color) -> this.toLine(coord, color) }
 
 }
