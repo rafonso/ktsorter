@@ -1,5 +1,7 @@
 package rafael.ktsorter.views.plot
 
+import rafael.ktsorter.util.Descriptable
+
 val limitsValues = listOf(
     Limits(5, 2.0),
     Limits(10, 2.0),
@@ -11,4 +13,10 @@ val limitsValues = listOf(
     Limits(1000, 0.5)
 )
 
-data class Limits(val quantity: Int, val radius: Double)
+data class Limits(val quantity: Int, val radius: Double) : Descriptable {
+
+    override val description: String
+        get() = quantity.toString()
+
+}
+

@@ -1,5 +1,6 @@
 package rafael.ktsorter.numbergenerator
 
+import rafael.ktsorter.util.Descriptable
 import kotlin.random.Random
 
 private const val randomFactor = 0.05
@@ -7,7 +8,7 @@ private const val randomFactor = 0.05
 /**
  * Creates the initial values to be sorted.
  */
-enum class NumberGenerator(val description: String) {
+enum class NumberGenerator(override val description: String) : Descriptable {
 
     /**
      * Creates a sequence of random numbers from 1 to n.

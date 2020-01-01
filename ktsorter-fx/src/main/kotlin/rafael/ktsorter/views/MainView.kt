@@ -1,16 +1,20 @@
 package rafael.ktsorter.views
 
-import javafx.collections.FXCollections
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleObjectProperty
+import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TextField
 import javafx.scene.layout.Pane
+import javafx.scene.shape.Shape
 import rafael.ktsorter.Styles
 import rafael.ktsorter.numbergenerator.NumberGenerator
 import rafael.ktsorter.views.plot.Limits
 import rafael.ktsorter.views.plot.Plotter
+import rafael.ktsorter.views.plot.Plotters
 import rafael.ktsorter.views.plot.limitsValues
 import tornadofx.*
 
@@ -19,7 +23,7 @@ class MainView : View("KTSorter") {
     private lateinit var pnlControls: Pane
     private lateinit var cmbQuantity: ComboBox<Limits>
     private lateinit var cmbSequenceType: ComboBox<NumberGenerator>
-    private lateinit var cmbExihibitionType: ComboBox<String>
+    private lateinit var cmbExihibitionType: ComboBox<Plotters>
     private lateinit var cmbSortingType: ComboBox<String>
     private lateinit var cmbIntervalCycles: ComboBox<Int>
     private lateinit var chbSound: CheckBox
@@ -31,6 +35,8 @@ class MainView : View("KTSorter") {
     private lateinit var txfTime: TextField
     private lateinit var sortPane: Pane
     private lateinit var plotter: Plotter
+
+    private var initialValues: ObjectProperty<IntArray> = SimpleObjectProperty<IntArray>()
 
     init {
         super.primaryStage.isResizable = false
@@ -46,9 +52,10 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbQuantity = combobox {
-                                items = FXCollections.observableArrayList(limitsValues)
-                                value = limitsValues.find { it.quantity == 50 }
-                                converter = LimitsConverter()
+                                items = limitsValues.observable()
+//                                value = limitsValues.find { it.quantity == 50 }
+                                converter =
+                                    DescriptableConverter(limitsValues)
                             }
                             label.labelFor = cmbQuantity
                         }
@@ -57,7 +64,9 @@ class MainView : View("KTSorter") {
                             label.addClass(Styles.labels)
                             cmbSequenceType = combobox {
                                 items = NumberGenerator.values().toList().observable()
-                                value = items[0]
+//                                value = items[0]
+                                converter =
+                                    DescriptableConverter(NumberGenerator.values())
                             }
                             label.labelFor = cmbSequenceType
                         }
@@ -65,7 +74,12 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbExihibitionType = combobox {
-                                items = FXCollections.observableArrayList("Spectre", "Points")
+                                items = Plotters.values().toList().observable()
+//                                value = items[0]
+                                converter = DescriptableConverter(Plotters.values())
+                                onAction = EventHandler {
+                                    exihibitionTypeChanged()
+                                }
                             }
                             label.labelFor = cmbExihibitionType
                         }
@@ -73,14 +87,14 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbSortingType = combobox {
-                                items = FXCollections.observableArrayList(
+                                items = listOf(
                                     "Bubble",
                                     "Cocktail",
                                     "Pancake",
                                     "Selection",
                                     "Insertion",
                                     "Circle"
-                                )
+                                ).observable()
                             }
                             label.labelFor = cmbSortingType
                         }
@@ -88,8 +102,8 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbIntervalCycles = combobox {
-                                items = FXCollections.observableArrayList(0, 1, 2, 5, 10, 20, 50)
-                                value = 10
+                                items = listOf(0, 1, 2, 5, 10, 20, 50).observable()
+//                                value = 10
                             }
                             label.labelFor = cmbIntervalCycles
                         }
@@ -108,22 +122,17 @@ class MainView : View("KTSorter") {
                     btnGenerateNumbers = button {
                         text = "Generate Number"
                         addClass(Styles.buttons)
-                        action {
-                            //                            val values = cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!)
-                            plotter = Plotter(
-                                sortPane,
-                                cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!.quantity),
-                                cmbQuantity.value
-                            )
-                        }
+                        action(this@MainView::generateInitialValues)
                     }
                     btnSort = button {
                         text = "Sort"
                         addClass(Styles.buttons)
+                        disableProperty().bind(initialValues.isNull)
                     }
                     btnReset = button {
                         text = "Reset"
                         addClass(Styles.buttons)
+                        onAction = EventHandler { initComponents() }
                     }
                     separator {
                         addClass(Styles.pad)
@@ -133,7 +142,7 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             txfComparsions = textfield {
-                                text = "9999"
+                                //                                text = "9999"
                                 isEditable = false
                                 addClass(Styles.texts)
                             }
@@ -142,7 +151,7 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             txfSwaps = textfield {
-                                text = "9999"
+                                //                                text = "9999"
                                 isEditable = false
                                 addClass(Styles.texts)
                             }
@@ -151,7 +160,7 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             txfTime = textfield {
-                                text = "9999"
+                                //                                text = "9999"
                                 isEditable = false
                                 addClass(Styles.texts)
                             }
@@ -164,6 +173,34 @@ class MainView : View("KTSorter") {
             sortPane = pane {
                 addClass(Styles.canvases)
             }
+        }
+        initComponents()
+    }
+
+    private fun initComponents() {
+        initialValues.value = null
+
+        cmbQuantity.value = limitsValues.find { it.quantity == 50 }
+        cmbSequenceType.value = cmbSequenceType.items[0]
+        cmbExihibitionType.value = cmbExihibitionType.items[0]
+        cmbSortingType.value = cmbSortingType.items[0]
+        cmbIntervalCycles.value = cmbIntervalCycles.items.find { it == 10 }
+        txfComparsions.text = null
+        txfSwaps.text = null
+        txfTime.text = null
+
+        sortPane.children.removeIf { n -> n is Shape }
+    }
+
+
+    private fun generateInitialValues() {
+        initialValues.value = cmbSequenceType.selectedItem !!.generate(cmbQuantity.selectedItem !!.quantity)
+        exihibitionTypeChanged()
+    }
+
+    private fun exihibitionTypeChanged() {
+        if (initialValues.isNotNull.value && cmbExihibitionType.value != null) {
+            plotter = cmbExihibitionType.value !!.createPlotter(sortPane, initialValues.value !!, cmbQuantity.value)
         }
     }
 }

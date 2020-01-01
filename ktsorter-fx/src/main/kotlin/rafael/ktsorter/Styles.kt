@@ -46,6 +46,8 @@ class Styles : Stylesheet() {
             }
             canvases {
                 backgroundColor= multi(Color.WHITE)
+//                borderInsets= multi(box((10.px)))
+                padding= box((10.px))
             }
 
 
