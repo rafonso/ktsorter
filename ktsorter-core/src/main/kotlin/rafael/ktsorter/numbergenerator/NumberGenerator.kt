@@ -3,7 +3,7 @@ package rafael.ktsorter.numbergenerator
 import rafael.ktsorter.util.Descriptable
 import kotlin.random.Random
 
-private const val randomFactor = 0.05
+internal const val randomFactor = 0.05
 
 /**
  * Creates the initial values to be sorted.
@@ -43,7 +43,7 @@ enum class NumberGenerator(override val description: String) : Descriptable {
     SEQUENCE_OF_4("Sequence of 4") {
 
         private fun getValue(delta: Int, pos: Int): List<Int> {
-            val value = (delta * (pos + Random.nextDouble())).toInt()
+            val value = (delta * (pos + Random.nextDouble())).toInt() + 1
             return List(delta) { value }
         }
 
