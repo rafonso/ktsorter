@@ -33,7 +33,7 @@ data class ComparsionEvent(override val values: List<Int>, override val position
 
 data class SwapEvent(override val values: List<Int>, override val positions: List<Int>) :
         BasicSortEvent(EventType.SWAP) {
-    constructor(values: List<Int>, pos1: Int, pos2: Int) : this(values, listOf(pos1, pos2))
+    constructor(values: IntArray, pos1: Int, pos2: Int) : this(values.toList(), listOf(pos1, pos2))
 }
 
 data class SetEvent(override val values: List<Int>, override val positions: List<Int>) :

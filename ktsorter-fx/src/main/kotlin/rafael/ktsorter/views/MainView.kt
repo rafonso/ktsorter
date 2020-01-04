@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane
 import javafx.scene.shape.Shape
 import rafael.ktsorter.Styles
 import rafael.ktsorter.numbergenerator.NumberGenerator
+import rafael.ktsorter.sorter.alghoritm.Sorters
 import rafael.ktsorter.views.plot.Limits
 import rafael.ktsorter.views.plot.Plotter
 import rafael.ktsorter.views.plot.Plotters
@@ -24,7 +25,7 @@ class MainView : View("KTSorter") {
     private lateinit var cmbQuantity: ComboBox<Limits>
     private lateinit var cmbSequenceType: ComboBox<NumberGenerator>
     private lateinit var cmbExihibitionType: ComboBox<Plotters>
-    private lateinit var cmbSortingType: ComboBox<String>
+    private lateinit var cmbSortingType: ComboBox<Sorters>
     private lateinit var cmbIntervalCycles: ComboBox<Int>
     private lateinit var chbSound: CheckBox
     private lateinit var btnGenerateNumbers: Button
@@ -87,14 +88,8 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbSortingType = combobox {
-                                items = listOf(
-                                    "Bubble",
-                                    "Cocktail",
-                                    "Pancake",
-                                    "Selection",
-                                    "Insertion",
-                                    "Circle"
-                                ).observable()
+                                items = Sorters.values().toList().observable()
+                                converter = DescriptableConverter(Sorters.values())
                             }
                             label.labelFor = cmbSortingType
                         }
