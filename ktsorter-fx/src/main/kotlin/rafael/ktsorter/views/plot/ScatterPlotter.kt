@@ -24,7 +24,7 @@ class ScatterPlotter(region: Region, initialValues: IntArray, limits: Limits) : 
         indexToRegion = 0.rangeTo(super.limits.quantity).map { xToRegion(it + 1) }
     }
 
-    override fun plotValues(values: IntArray): Iterable<Shape> = values.mapIndexed(this::valueToCircle)
+    override fun plotValues(values: List<Int>): Iterable<Shape> = values.mapIndexed(this::valueToCircle)
 
 }
 

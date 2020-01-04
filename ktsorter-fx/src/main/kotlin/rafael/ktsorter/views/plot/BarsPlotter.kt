@@ -30,5 +30,5 @@ class BarsPlotter(region: Region, initialValues: IntArray, limits: Limits) : Plo
         y0 = yToRegion(0)
     }
 
-    override fun plotValues(values: IntArray): Iterable<Shape> = values.mapIndexed(this::valueToBar)
+    override fun plotValues(values: List<Int>): Iterable<Shape> = values.mapIndexed(this::valueToBar)
 }

@@ -35,7 +35,7 @@ class RadialBarsPlotter(region: Region, initialValues: IntArray, limits: Limits)
         deltaTheta = (2 * PI) / super.limits.quantity
     }
 
-    override fun plotValues(values: IntArray): Iterable<Shape> =
+    override fun plotValues(values: List<Int>): Iterable<Shape> =
         values.mapIndexed(this::valueToRadial)
             .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
             .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }

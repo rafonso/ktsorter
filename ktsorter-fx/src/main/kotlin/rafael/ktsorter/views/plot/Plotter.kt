@@ -5,7 +5,7 @@ import javafx.scene.shape.Shape
 import tornadofx.add
 import tornadofx.getChildList
 
-abstract class Plotter(protected val region: Region, initialValues: IntArray, protected val limits: Limits) {
+abstract class Plotter(protected val region: Region, val initialValues: IntArray, protected val limits: Limits) {
 
     protected val colors = ColorManager.getColors(limits.quantity)
 
@@ -15,19 +15,18 @@ abstract class Plotter(protected val region: Region, initialValues: IntArray, pr
 
     init {
         this.initPlotter()
-        this.plot(initialValues)
+        this.plot(initialValues.toList())
     }
 
     protected abstract fun initPlotter()
 
-    protected abstract fun plotValues(values: IntArray): Iterable<Shape>
+    protected abstract fun plotValues(values: List<Int>): Iterable<Shape>
 
-    private fun plot(values: IntArray) {
+    fun plot(values: List<Int>) {
         region.getChildList()?.removeIf { n -> n is Shape }
 
         val shapes = plotValues(values)
         shapes.forEach(region::add)
-
     }
 
 }

@@ -1,43 +1,60 @@
 package rafael.ktsorter.views
 
+import javafx.application.Platform
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.geometry.Pos
-import javafx.scene.control.Button
-import javafx.scene.control.CheckBox
-import javafx.scene.control.ComboBox
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 import javafx.scene.layout.Pane
+import javafx.scene.layout.Priority
 import javafx.scene.shape.Shape
+import javafx.scene.text.Font
 import rafael.ktsorter.Styles
 import rafael.ktsorter.numbergenerator.NumberGenerator
+import rafael.ktsorter.sorter.alghoritm.Sorter
 import rafael.ktsorter.sorter.alghoritm.Sorters
+import rafael.ktsorter.sorter.events.CounterListener
+import rafael.ktsorter.sorter.events.ErrorEvent
+import rafael.ktsorter.sorter.events.SortEvent
+import rafael.ktsorter.sorter.events.SortListener
+import rafael.ktsorter.util.Observer
 import rafael.ktsorter.views.plot.Limits
 import rafael.ktsorter.views.plot.Plotter
 import rafael.ktsorter.views.plot.Plotters
 import rafael.ktsorter.views.plot.limitsValues
 import tornadofx.*
+import java.io.PrintWriter
+import java.io.StringWriter
+import java.time.Duration
+import java.util.*
 
-class MainView : View("KTSorter") {
+class MainView : View("KTSorter"), SortListener, Observer {
 
-    private lateinit var pnlControls: Pane
-    private lateinit var cmbQuantity: ComboBox<Limits>
-    private lateinit var cmbSequenceType: ComboBox<NumberGenerator>
-    private lateinit var cmbExihibitionType: ComboBox<Plotters>
-    private lateinit var cmbSortingType: ComboBox<Sorters>
-    private lateinit var cmbIntervalCycles: ComboBox<Int>
-    private lateinit var chbSound: CheckBox
-    private lateinit var btnGenerateNumbers: Button
-    private lateinit var btnSort: Button
-    private lateinit var btnReset: Button
-    private lateinit var txfComparsions: TextField
-    private lateinit var txfSwaps: TextField
-    private lateinit var txfTime: TextField
-    private lateinit var sortPane: Pane
-    private lateinit var plotter: Plotter
+    // @formatter:off
+    private lateinit var pnlControls        : Pane
+    private lateinit var cmbQuantity        : ComboBox<Limits>
+    private lateinit var cmbSequenceType    : ComboBox<NumberGenerator>
+    private lateinit var cmbExihibitionType : ComboBox<Plotters>
+    private lateinit var cmbSortingType     : ComboBox<Sorters>
+    private lateinit var cmbIntervalCycles  : ComboBox<Long>
+    private lateinit var chbSound           : CheckBox
+    private lateinit var btnGenerateNumbers : Button
+    private lateinit var btnSort            : Button
+    private lateinit var btnReset           : Button
+    private lateinit var txfComparsions     : TextField
+    private lateinit var txfSwaps           : TextField
+    private lateinit var txfTime            : TextField
+    private lateinit var sortPane           : Pane
+    private lateinit var plotter            : Plotter
+    // @formatter:on
 
-    private var initialValues: ObjectProperty<IntArray> = SimpleObjectProperty<IntArray>()
+    private val initialValues: ObjectProperty<IntArray> = SimpleObjectProperty<IntArray>()
+
+    private val running = SimpleBooleanProperty(false)
+
+    private var counterListener: CounterListener? = null
 
     init {
         super.primaryStage.isResizable = false
@@ -56,7 +73,7 @@ class MainView : View("KTSorter") {
                                 items = limitsValues.observable()
 //                                value = limitsValues.find { it.quantity == 50 }
                                 converter =
-                                    DescriptableConverter(limitsValues)
+                                        DescriptableConverter(limitsValues)
                             }
                             label.labelFor = cmbQuantity
                         }
@@ -67,7 +84,7 @@ class MainView : View("KTSorter") {
                                 items = NumberGenerator.values().toList().observable()
 //                                value = items[0]
                                 converter =
-                                    DescriptableConverter(NumberGenerator.values())
+                                        DescriptableConverter(NumberGenerator.values())
                             }
                             label.labelFor = cmbSequenceType
                         }
@@ -97,7 +114,7 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbIntervalCycles = combobox {
-                                items = listOf(0, 1, 2, 5, 10, 20, 50).observable()
+                                items = listOf(0L, 1L, 2L, 5L, 10L, 20L, 50L).observable()
 //                                value = 10
                             }
                             label.labelFor = cmbIntervalCycles
@@ -110,6 +127,7 @@ class MainView : View("KTSorter") {
                                 isDisable = true
                             }
                         }
+                        disableProperty().bind(running)
                     }
                     separator {
                         addClass(Styles.pad)
@@ -118,16 +136,19 @@ class MainView : View("KTSorter") {
                         text = "Generate Number"
                         addClass(Styles.buttons)
                         action(this@MainView::generateInitialValues)
+                        disableProperty().bind(running)
                     }
                     btnSort = button {
                         text = "Sort"
                         addClass(Styles.buttons)
-                        disableProperty().bind(initialValues.isNull)
+                        onAction = EventHandler { startSorting() }
+                        disableProperty().bind(initialValues.isNull or running)
                     }
                     btnReset = button {
                         text = "Reset"
                         addClass(Styles.buttons)
                         onAction = EventHandler { initComponents() }
+                        disableProperty().bind(running)
                     }
                     separator {
                         addClass(Styles.pad)
@@ -137,7 +158,6 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             txfComparsions = textfield {
-                                //                                text = "9999"
                                 isEditable = false
                                 addClass(Styles.texts)
                             }
@@ -146,7 +166,6 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             txfSwaps = textfield {
-                                //                                text = "9999"
                                 isEditable = false
                                 addClass(Styles.texts)
                             }
@@ -155,7 +174,6 @@ class MainView : View("KTSorter") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             txfTime = textfield {
-                                //                                text = "9999"
                                 isEditable = false
                                 addClass(Styles.texts)
                             }
@@ -179,7 +197,7 @@ class MainView : View("KTSorter") {
         cmbSequenceType.value = cmbSequenceType.items[0]
         cmbExihibitionType.value = cmbExihibitionType.items[0]
         cmbSortingType.value = cmbSortingType.items[0]
-        cmbIntervalCycles.value = cmbIntervalCycles.items.find { it == 10 }
+        cmbIntervalCycles.value = cmbIntervalCycles.items.find { it == 10L }
         txfComparsions.text = null
         txfSwaps.text = null
         txfTime.text = null
@@ -189,14 +207,71 @@ class MainView : View("KTSorter") {
 
 
     private fun generateInitialValues() {
-        initialValues.value = cmbSequenceType.selectedItem !!.generate(cmbQuantity.selectedItem !!.quantity)
+        initialValues.value = cmbSequenceType.selectedItem!!.generate(cmbQuantity.selectedItem!!.quantity)
         exihibitionTypeChanged()
     }
 
     private fun exihibitionTypeChanged() {
         if (initialValues.isNotNull.value && cmbExihibitionType.value != null) {
-            plotter = cmbExihibitionType.value !!.createPlotter(sortPane, initialValues.value !!, cmbQuantity.value)
+            plotter = cmbExihibitionType.value!!.createPlotter(sortPane, initialValues.value!!, cmbQuantity.value)
         }
     }
+
+    private fun startSorting() {
+        val sorter = cmbSortingType.value.generator(cmbIntervalCycles.value).also {
+            it.observers.add(this::invoke)
+        }
+        sorter.subscribe(this)
+
+        counterListener = CounterListener().also {
+            sorter.subscribe(it)
+            it.observers.add(this::invoke)
+        }
+
+        Thread(SorterTask(sorter, plotter), "%s-%tT".format(cmbSortingType.value, Date())).start()
+    }
+
+    override fun onEvent(event: SortEvent) {
+        Platform.runLater {
+            when (event) {
+                is ErrorEvent -> showError(event.error)
+            }
+        }
+    }
+
+    override fun invoke(id: String, value: Any?) {
+        Platform.runLater {
+            when (id) {
+                CounterListener.COMPARSIONS -> txfComparsions.text = (value as Int).toString()
+                CounterListener.DURATION    -> txfTime.text = (value as Duration).toString()
+                CounterListener.SWAPS       -> txfSwaps.text = (value as Int).toString()
+                Sorter.RUNNING              -> running.value = (value as Boolean)
+            }
+        }
+    }
+
+    private fun showError(error: Exception) {
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        error.printStackTrace(pw)
+        val stackTrace = sw.toString()
+
+        Alert(Alert.AlertType.ERROR).also {
+            it.title = "Error while running ${cmbSortingType.value.description}"
+            it.headerText = if (error.message == null) "" else error.message
+            it.initOwner(super.primaryStage)
+            it.dialogPane.content = vbox {
+                label { text = "Stack Trace:" }
+                textarea {
+                    text = stackTrace
+                    font = Font.font("monospaced")
+                    vgrow = Priority.ALWAYS
+                }
+            }
+//            (it.dialogPane.scene.window as Stage).icons.add(geneticIcon)
+            it.isResizable = true
+        }.showAndWait()
+    }
+
 }
 
