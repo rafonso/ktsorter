@@ -115,7 +115,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             cmbIntervalCycles = combobox {
                                 items = listOf(0L, 1L, 2L, 5L, 10L, 20L, 50L).observable()
-//                                value = 10
+                                value = 1
                             }
                             label.labelFor = cmbIntervalCycles
                         }
@@ -197,7 +197,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
         cmbSequenceType.value = cmbSequenceType.items[0]
         cmbExihibitionType.value = cmbExihibitionType.items[0]
         cmbSortingType.value = cmbSortingType.items[0]
-        cmbIntervalCycles.value = cmbIntervalCycles.items.find { it == 10L }
+        cmbIntervalCycles.value = 1
         txfComparsions.text = null
         txfSwaps.text = null
         txfTime.text = null
@@ -243,7 +243,10 @@ class MainView : View("KTSorter"), SortListener, Observer {
         Platform.runLater {
             when (id) {
                 CounterListener.COMPARSIONS -> txfComparsions.text = (value as Int).toString()
-                CounterListener.DURATION    -> txfTime.text = (value as Duration).toString()
+                CounterListener.DURATION    -> {
+                    val duration = (value as Duration)
+                    txfTime.text = "%02d:%02d.%03d".format(duration.toMinutesPart(), duration.toSecondsPart(), duration.toMillisPart())
+                }
                 CounterListener.SWAPS       -> txfSwaps.text = (value as Int).toString()
                 Sorter.RUNNING              -> running.value = (value as Boolean)
             }
@@ -268,7 +271,6 @@ class MainView : View("KTSorter"), SortListener, Observer {
                     vgrow = Priority.ALWAYS
                 }
             }
-//            (it.dialogPane.scene.window as Stage).icons.add(geneticIcon)
             it.isResizable = true
         }.showAndWait()
     }
