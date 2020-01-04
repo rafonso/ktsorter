@@ -1,14 +1,34 @@
 package rafael.ktsorter.sorter.events
 
+import rafael.ktsorter.util.Observable
+import rafael.ktsorter.util.Observer
 import java.time.Duration
 import java.time.LocalDateTime
+import kotlin.properties.Delegates
 
-class CounterListener : SortListener {
+class CounterListener : SortListener, Observable {
 
-    private var _comparsions: Int = 0
-    private var _swaps: Int = 0
+    // @formatter:off
+    companion object {
+        const val COMPARSIONS = "COMPARSIONS"
+        const val SWAPS = "SWAPS"
+        const val DURATION = "DURATION"
+    }
+    // @formatter:on
+
+    // @formatter:off
+    private var _comparsions: Int       by Delegates.observable(0)              { _, _, newValue ->
+        super.dataChanged(COMPARSIONS, newValue)
+    }
+    private var _swaps      : Int       by Delegates.observable(0)              { _, _, newValue ->
+        super.dataChanged(SWAPS, newValue)
+    }
+    private var _duration   : Duration  by Delegates.observable(Duration.ZERO)  { _, _, newValue ->
+        super.dataChanged(DURATION, newValue)
+    }
+    // @formatter:on
+
     private lateinit var _t0: LocalDateTime
-    private var _duration: Duration = Duration.ZERO
 
     val comparsions: Int
         get() = _comparsions
@@ -26,13 +46,16 @@ class CounterListener : SortListener {
     override fun onEvent(event: SortEvent) {
         when (event) {
             is StartEvent      -> _t0 = event.date
-            is ComparsionEvent -> _comparsions += 1
-            is SwapEvent       -> _swaps += 1
-            is SetEvent        -> _swaps += 1
+            is ComparsionEvent -> _comparsions ++
+            is SwapEvent       -> _swaps ++
+            is SetEvent        -> _swaps ++
 
         }
         if (event !is IdleEvent) {
             _duration = Duration.between(_t0, event.date)
         }
     }
+
+    override val observers: MutableList<Observer> = mutableListOf()
+
 }

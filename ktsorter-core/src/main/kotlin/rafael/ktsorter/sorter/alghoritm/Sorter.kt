@@ -1,17 +1,29 @@
 package rafael.ktsorter.sorter.alghoritm
 
 import rafael.ktsorter.sorter.events.*
+import rafael.ktsorter.util.Observable
+import rafael.ktsorter.util.Observer
 import java.lang.Exception
+import kotlin.properties.Delegates
 
-abstract class Sorter(private val pauseTime: Long) {
+abstract class Sorter(private val pauseTime: Long) : Observable {
 
-    private val observers = mutableListOf<SortListener>()
+    companion object {
+        const val RUNNING = "RUNNING"
+    }
+
+    private val sortListeners = mutableListOf<SortListener>()
+
+    private var _running: Boolean by Delegates.observable(false) { _, _, newValue -> super.dataChanged(RUNNING, newValue) }
 
     private val wait: () -> Unit = if (pauseTime == 0L) ({ }) else ({ Thread.sleep(pauseTime) })
 
+    val running: Boolean
+        get() = _running
+
     private fun notifyAll(event: SortEvent) {
         wait()
-        observers.forEach { observer -> observer.onEvent(event) }
+        sortListeners.forEach { observer -> observer.onEvent(event) }
     }
 
     protected fun isLesser(values: IntArray, pos1: Int, pos2: Int): Boolean {
@@ -43,20 +55,28 @@ abstract class Sorter(private val pauseTime: Long) {
     protected abstract fun process(values: IntArray): IntArray
 
     fun subscribe(listener: SortListener) {
-        observers += listener
+        sortListeners += listener
     }
 
     fun unsubscribe(listener: SortListener) {
-        observers -= listener
+        sortListeners -= listener
     }
 
+    override val observers: MutableList<Observer> = mutableListOf()
+
     fun run(values: IntArray) {
+        check(!_running) {
+            "Sorter is already running"
+        }
         try {
+            _running = true
             this.notifyAll(StartEvent(values.toList()))
             val sortedValues = process(values)
             this.notifyAll(EndEvent(sortedValues.toList()))
         } catch (e: Exception) {
             this.notifyAll(ErrorEvent(e))
+        } finally {
+            _running = false
         }
     }
 

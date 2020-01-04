@@ -2,8 +2,8 @@ package rafael.ktsorter.sorter.events
 
 import java.time.LocalDateTime
 
-enum class EventType {
-    IDLE, START, COMPARSION, SWAP, SET, ENDED, ERROR
+enum class EventType(val isFinal: Boolean = false) {
+    IDLE, START, COMPARSION, SWAP, SET, ENDED(true), ERROR(true)
 }
 
 sealed class SortEvent(val type: EventType) {
