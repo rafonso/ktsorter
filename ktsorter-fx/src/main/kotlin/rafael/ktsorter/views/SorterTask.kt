@@ -22,7 +22,7 @@ class SorterTask(private val sorter: Sorter, private val plotter: Plotter) : Tas
             when (event) {
                 is BasicSortEvent -> {
                     Platform.runLater {
-                        plotter.plot(event.values)
+                        plotter.plot(event.values, event.positions, event.type)
                     }
                 }
             }

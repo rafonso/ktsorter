@@ -2,6 +2,7 @@ package rafael.ktsorter.views.plot
 
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
+import rafael.ktsorter.sorter.events.EventType
 import tornadofx.add
 import tornadofx.getChildList
 
@@ -15,17 +16,20 @@ abstract class Plotter(protected val region: Region, val initialValues: IntArray
 
     init {
         this.initPlotter()
-        this.plot(initialValues.toList())
+        this.plot(initialValues.toList(), emptyList(), EventType.IDLE)
     }
 
     protected abstract fun initPlotter()
 
-    protected abstract fun plotValues(values: List<Int>): Iterable<Shape>
+    protected abstract fun plotValues(values: List<Int>): List<Shape>
 
-    fun plot(values: List<Int>) {
+    protected abstract fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType)
+
+    fun plot(values: List<Int>, positions: List<Int>, eventType: EventType) {
         region.getChildList()?.removeIf { n -> n is Shape }
 
         val shapes = plotValues(values)
+        plotPositions(shapes, positions, eventType)
         shapes.forEach(region::add)
     }
 

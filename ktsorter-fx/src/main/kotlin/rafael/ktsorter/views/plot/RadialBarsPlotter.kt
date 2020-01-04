@@ -4,6 +4,7 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.Shape
+import rafael.ktsorter.sorter.events.EventType
 import kotlin.math.*
 
 class RadialBarsPlotter(region: Region, initialValues: IntArray, limits: Limits) :
@@ -35,11 +36,15 @@ class RadialBarsPlotter(region: Region, initialValues: IntArray, limits: Limits)
         deltaTheta = (2 * PI) / super.limits.quantity
     }
 
-    override fun plotValues(values: List<Int>): Iterable<Shape> =
-        values.mapIndexed(this::valueToRadial)
-            .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
-            .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }
-            .map { (coord, color) -> Pair(coord + centerRegion, color) }
-            .map { (coord, color) -> this.toLine(coord, color) }
+    override fun plotValues(values: List<Int>): List<Shape> =
+            values.asSequence().mapIndexed(this::valueToRadial)
+                    .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
+                    .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }
+                    .map { (coord, color) -> Pair(coord + centerRegion, color) }
+                    .map { (coord, color) -> this.toLine(coord, color) }.toList()
+
+    override fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType) {
+        basicPlotPositions(shapes, positions, eventType, limits)
+    }
 
 }

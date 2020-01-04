@@ -4,6 +4,7 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 import javafx.scene.shape.Shape
+import rafael.ktsorter.sorter.events.EventType
 import kotlin.math.*
 
 const val ellipseFactor = 0.95
@@ -37,11 +38,15 @@ class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limi
         deltaTheta = (2 * PI) / super.limits.quantity
     }
 
-    override fun plotValues(values: List<Int>): Iterable<Shape> =
-        values.mapIndexed(this::valueToRadial)
-            .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
-            .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }
-            .map { (coord, color) -> Pair(coord + centerRegion, color) }
-            .map { (coord, color) -> this.toCircle(coord, color) }
+    override fun plotValues(values: List<Int>): List<Shape> =
+            values.asSequence().mapIndexed(this::valueToRadial)
+                    .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
+                    .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }
+                    .map { (coord, color) -> Pair(coord + centerRegion, color) }
+                    .map { (coord, color) -> this.toCircle(coord, color) }.toList()
+
+    override fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType) {
+        basicPlotPositions(shapes, positions, eventType, limits)
+    }
 
 }

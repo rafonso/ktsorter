@@ -4,6 +4,7 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
+import rafael.ktsorter.sorter.events.EventType
 
 class BarsPlotter(region: Region, initialValues: IntArray, limits: Limits) : Plotter(region, initialValues, limits) {
 
@@ -30,5 +31,9 @@ class BarsPlotter(region: Region, initialValues: IntArray, limits: Limits) : Plo
         y0 = yToRegion(0)
     }
 
-    override fun plotValues(values: List<Int>): Iterable<Shape> = values.mapIndexed(this::valueToBar)
+    override fun plotValues(values: List<Int>): List<Shape> = values.mapIndexed(this::valueToBar)
+
+    override fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType) {
+        basicPlotPositions(shapes, positions, eventType, limits)
+    }
 }
