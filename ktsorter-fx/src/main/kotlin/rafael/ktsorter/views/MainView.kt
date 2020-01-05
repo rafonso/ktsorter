@@ -2,7 +2,6 @@ package rafael.ktsorter.views
 
 import javafx.application.Platform
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -13,12 +12,9 @@ import javafx.scene.shape.Shape
 import javafx.scene.text.Font
 import rafael.ktsorter.Styles
 import rafael.ktsorter.numbergenerator.NumberGenerator
-import rafael.ktsorter.sorter.alghoritm.Sorter
 import rafael.ktsorter.sorter.alghoritm.Sorters
-import rafael.ktsorter.sorter.events.CounterListener
-import rafael.ktsorter.sorter.events.ErrorEvent
+import rafael.ktsorter.sorter.events.*
 import rafael.ktsorter.sorter.events.SortEvent
-import rafael.ktsorter.sorter.events.SortListener
 import rafael.ktsorter.util.Observer
 import rafael.ktsorter.views.plot.Limits
 import rafael.ktsorter.views.plot.Plotter
@@ -29,6 +25,10 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.time.Duration
 import java.util.*
+
+private enum class RunningState {
+    WAITING_DATA, READY_TO_RUN, RUNNING, CONCLUDED
+}
 
 class MainView : View("KTSorter"), SortListener, Observer {
 
@@ -50,9 +50,15 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private lateinit var plotter            : Plotter
     // @formatter:on
 
-    private val initialValues: ObjectProperty<IntArray> = SimpleObjectProperty<IntArray>()
+    private val initialValues: ObjectProperty<IntArray> = SimpleObjectProperty<IntArray>().also { arr ->
+        arr.onChange { newValue ->
+            runningState.value =
+                    if (newValue == null || newValue.isEmpty()) RunningState.WAITING_DATA
+                    else RunningState.READY_TO_RUN
+        }
+    }
 
-    private val running = SimpleBooleanProperty(false)
+    private val runningState: ObjectProperty<RunningState> = SimpleObjectProperty<RunningState>(RunningState.WAITING_DATA)
 
     private var counterListener: CounterListener? = null
 
@@ -64,14 +70,13 @@ class MainView : View("KTSorter"), SortListener, Observer {
         addClass(Styles.mainScreen)
         left {
             pnlControls = form {
-                vbox(spacing = 10, alignment = Pos.CENTER) {
+                vbox(10, Pos.CENTER) {
                     fieldset {
                         field("Quantity") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbQuantity = combobox {
                                 items = limitsValues.observable()
-//                                value = limitsValues.find { it.quantity == 50 }
                                 converter =
                                         DescriptableConverter(limitsValues)
                             }
@@ -82,7 +87,6 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             cmbSequenceType = combobox {
                                 items = NumberGenerator.values().toList().observable()
-//                                value = items[0]
                                 converter =
                                         DescriptableConverter(NumberGenerator.values())
                             }
@@ -93,7 +97,6 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             cmbExihibitionType = combobox {
                                 items = Plotters.values().toList().observable()
-//                                value = items[0]
                                 converter = DescriptableConverter(Plotters.values())
                                 onAction = EventHandler {
                                     exihibitionTypeChanged()
@@ -115,40 +118,35 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             cmbIntervalCycles = combobox {
                                 items = listOf(0L, 1L, 2L, 5L, 10L, 20L, 50L).observable()
-                                value = 1
                             }
                             label.labelFor = cmbIntervalCycles
                         }
-                        field("Ativar som") {
+                        field("Activate Sound") {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             chbSound = checkbox {
-                                isSelected = true
                                 isDisable = true
                             }
                         }
-                        disableProperty().bind(running)
+                        disableProperty().bind(runningState.isEqualTo(RunningState.RUNNING))
                     }
                     separator {
                         addClass(Styles.pad)
                     }
-                    btnGenerateNumbers = button {
-                        text = "Generate Number"
+                    btnGenerateNumbers = button("Generate Numbers") {
                         addClass(Styles.buttons)
-                        action(this@MainView::generateInitialValues)
-                        disableProperty().bind(running)
+                        onAction = EventHandler { generateInitialValues() }
+                        disableProperty().bind(runningState.isEqualTo(RunningState.RUNNING))
                     }
-                    btnSort = button {
-                        text = "Sort"
+                    btnSort = button("Sort") {
                         addClass(Styles.buttons)
                         onAction = EventHandler { startSorting() }
-                        disableProperty().bind(initialValues.isNull or running)
+                        disableProperty().bind(runningState.isNotEqualTo(RunningState.READY_TO_RUN))
                     }
-                    btnReset = button {
-                        text = "Reset"
+                    btnReset = button("Reset") {
                         addClass(Styles.buttons)
                         onAction = EventHandler { initComponents() }
-                        disableProperty().bind(running)
+                        disableProperty().bind(runningState.isEqualTo(RunningState.RUNNING))
                     }
                     separator {
                         addClass(Styles.pad)
@@ -198,6 +196,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
         cmbExihibitionType.value = cmbExihibitionType.items[0]
         cmbSortingType.value = cmbSortingType.items[0]
         cmbIntervalCycles.value = 1
+        chbSound.isSelected = true
         txfComparsions.text = null
         txfSwaps.text = null
         txfTime.text = null
@@ -229,15 +228,21 @@ class MainView : View("KTSorter"), SortListener, Observer {
         }
 
         Thread(SorterTask(sorter, plotter), "%s-%tT".format(cmbSortingType.value, Date())).start()
+        runningState.value = RunningState.RUNNING
     }
 
     override fun onEvent(event: SortEvent) {
         Platform.runLater {
             when (event) {
-                is ErrorEvent -> showError(event.error)
+                is ErrorEvent -> {
+                    showError(event.error)
+                    runningState.value = RunningState.CONCLUDED
+                }
+                is EndEvent   -> runningState.value = RunningState.CONCLUDED
             }
         }
     }
+
 
     override fun invoke(id: String, value: Any?) {
         Platform.runLater {
@@ -248,7 +253,6 @@ class MainView : View("KTSorter"), SortListener, Observer {
                     txfTime.text = "%02d:%02d.%03d".format(duration.toMinutesPart(), duration.toSecondsPart(), duration.toMillisPart())
                 }
                 CounterListener.SWAPS       -> txfSwaps.text = (value as Int).toString()
-                Sorter.RUNNING              -> running.value = (value as Boolean)
             }
         }
     }
@@ -276,4 +280,3 @@ class MainView : View("KTSorter"), SortListener, Observer {
     }
 
 }
-
