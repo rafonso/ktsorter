@@ -11,5 +11,6 @@ enum class Sorters(override val description: String, val generator: (Long) -> So
     COMB        ("Comb"     , { CombSorter      (it)     }),
     SHELL       ("Shell"    , { ShellSorter     (it)     }),
     INSERTION   ("Insertion", { InsertionSorter (it)     }),
+    SELECTION   ("Selection", { SelectionSorter (it)     }),
     // @formatter:on
 }
