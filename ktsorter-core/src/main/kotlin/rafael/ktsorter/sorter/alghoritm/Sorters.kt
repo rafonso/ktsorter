@@ -6,7 +6,8 @@ enum class Sorters(override val description: String, val generator: (Long) -> So
     // @formatter:off
     BUBBLE      ("Bobble"   , { BubbleSorter    (it)    }),
     COCKTAIL    ("Cocktail" , { CocktailSorter  (it)    }),
-    CIRCLE      ("Circle"   , { CircleSorter    (it)    }),
+//    CIRCLE      ("Circle"   , { CircleSorter    (it)    }),
     GNOME       ("Gnome"    , { GnomeSorter     (it)    }),
+    COMB        ("Comb"     , { CombSorter     (it)     }),
     // @formatter:on
 }
