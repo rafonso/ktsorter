@@ -8,7 +8,8 @@ enum class Sorters(override val description: String, val generator: (Long) -> So
     COCKTAIL    ("Cocktail" , { CocktailSorter  (it)    }),
 //    CIRCLE      ("Circle"   , { CircleSorter    (it)    }),
     GNOME       ("Gnome"    , { GnomeSorter     (it)    }),
-    COMB        ("Comb"     , { CombSorter     (it)     }),
-    SHELL       ("Shell"    , { ShellSorter    (it)     }),
+    COMB        ("Comb"     , { CombSorter      (it)     }),
+    SHELL       ("Shell"    , { ShellSorter     (it)     }),
+    INSERTION   ("Insertion", { InsertionSorter (it)     }),
     // @formatter:on
 }
