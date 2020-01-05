@@ -9,5 +9,6 @@ enum class Sorters(override val description: String, val generator: (Long) -> So
 //    CIRCLE      ("Circle"   , { CircleSorter    (it)    }),
     GNOME       ("Gnome"    , { GnomeSorter     (it)    }),
     COMB        ("Comb"     , { CombSorter     (it)     }),
+    SHELL       ("Shell"    , { ShellSorter    (it)     }),
     // @formatter:on
 }
