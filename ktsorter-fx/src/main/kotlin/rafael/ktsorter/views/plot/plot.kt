@@ -5,6 +5,8 @@ import rafael.ktsorter.sorter.events.EventType
 import kotlin.math.cos
 import kotlin.math.sin
 
+const val ellipseFactor = 0.95
+
 data class CartesianCoordinate(val x: Double, val y: Double) {
     operator fun plus(p: CartesianCoordinate) = CartesianCoordinate(this.x + p.x, this.y + p.y)
 

@@ -20,7 +20,11 @@ enum class Plotters(override val description: String) : Descriptable {
     RADIAL_BARS_SCATTER("Radial Bars Scatter") {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             RadialBarsPlotter(region, initialValues, limits)
-    }
+    },
+    ELLIPSE("Ellipse") {
+        override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
+                EllipsePlotter(region, initialValues, limits)
+    },
     ;
 
     abstract fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter

@@ -7,8 +7,6 @@ import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
 import kotlin.math.*
 
-const val ellipseFactor = 0.95
-
 class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limits) :
     Plotter(region, initialValues, limits) {
 
