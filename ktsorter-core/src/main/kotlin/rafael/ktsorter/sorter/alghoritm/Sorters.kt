@@ -13,5 +13,6 @@ enum class Sorters(override val description: String, val generator: (Long) -> So
     SHELL       ("Shell"    , { ShellSorter     (it)     }),
     INSERTION   ("Insertion", { InsertionSorter (it)     }),
     SELECTION   ("Selection", { SelectionSorter (it)     }),
+    QUICKSORT   ("QuickSort", { QuickSorter     (it)     }),
     // @formatter:on
 }
