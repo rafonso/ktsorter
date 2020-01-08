@@ -14,5 +14,7 @@ enum class Sorters(override val description: String, val generator: (Long) -> So
     INSERTION   ("Insertion", { InsertionSorter (it)     }),
     SELECTION   ("Selection", { SelectionSorter (it)     }),
     QUICKSORT   ("QuickSort", { QuickSorter     (it)     }),
+    QUICKINSERT ("QuickInsertSort", { QuickInsertSorter     (it)     }),
+//    HEAP        ("HeapSort" , { HeapSorter      (it)     }),
     // @formatter:on
 }
