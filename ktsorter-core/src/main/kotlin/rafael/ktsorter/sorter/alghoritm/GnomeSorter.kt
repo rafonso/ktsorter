@@ -2,19 +2,18 @@ package rafael.ktsorter.sorter.alghoritm
 
 class GnomeSorter(pauseTime: Long) : Sorter(pauseTime) {
 
-    private fun sort(values: IntArray, limit: Int) {
-        for(i in limit downTo 1) {
-            if(!super.isLesser(values, i, i - 1)) {
-                break
-            }
-            super.swap(values, i, i - 1)
+    private tailrec fun sort(values: IntArray, limit: Int, i: Int) {
+        if (i == 0 || !super.isLesser(values, i, i - 1)) {
+            return
         }
+
+        super.swap(values, i, i - 1)
+
+        sort(values, limit, i - 1)
     }
 
     override fun process(values: IntArray): IntArray {
-        for(pos in 1 until values.size) {
-            this.sort(values, pos)
-        }
+        values.indices.forEach { this.sort(values, it, it) }
 
         return values
     }
