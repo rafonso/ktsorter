@@ -1,6 +1,10 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class BubbleSorter(pauseTime: Long) : Sorter(pauseTime) {
+class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.EXCHANGE
+    }
 
     override fun process(values: IntArray): IntArray {
         for (i in (values.size - 1) downTo 1) {

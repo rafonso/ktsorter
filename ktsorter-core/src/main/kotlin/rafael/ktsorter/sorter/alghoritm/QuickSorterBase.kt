@@ -1,6 +1,6 @@
 package rafael.ktsorter.sorter.alghoritm
 
-abstract class QuickSorterBase(pauseTime: Long) : Sorter(pauseTime) {
+abstract class QuickSorterBase(pauseTime: Long, type: SortType) : Sorter(pauseTime, type) {
 
     private fun partition(values: IntArray, pivot: Int, left: Int, right: Int): Int {
         val pivotValue = values[pivot]

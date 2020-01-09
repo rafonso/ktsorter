@@ -5,7 +5,11 @@ private const val MIN_SIZE = 10
 /**
  * https://megocode3.wordpress.com/2008/01/28/8/
  */
-class QuickInsertSorter(pauseTime: Long) : QuickSorterBase(pauseTime) {
+class QuickInsertSorter(pauseTime: Long) : QuickSorterBase(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.HYBRID
+    }
 
     private tailrec fun findInsertionPos(values: IntArray, value: Int, j: Int): Int {
         if (j <= 0 || super.isLesserThan(values, j - 1, value)) {

@@ -6,7 +6,7 @@ import rafael.ktsorter.util.Observer
 import java.lang.Exception
 import kotlin.properties.Delegates
 
-abstract class Sorter(private val pauseTime: Long) : Observable {
+abstract class Sorter(private val pauseTime: Long, val type: SortType) : Observable {
 
     companion object {
         const val RUNNING = "RUNNING"

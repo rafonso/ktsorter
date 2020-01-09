@@ -4,7 +4,11 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Selection_sort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#selectionSort
  */
-class SelectionSorter(pauseTime: Long) : Sorter(pauseTime) {
+class SelectionSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.SELECTION
+    }
 
     private tailrec fun getSelectedIndex(values: IntArray, j: Int, selectedIndex: Int): Int {
         if (j == values.size) {

@@ -3,7 +3,11 @@ package rafael.ktsorter.sorter.alghoritm
 /**
  * https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort
  */
-class OddEvenSorter(pauseTime: Long) : Sorter(pauseTime) {
+class OddEvenSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.EXCHANGE
+    }
 
     override tailrec fun process(values: IntArray): IntArray {
         var sorted = true

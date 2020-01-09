@@ -4,7 +4,11 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Shellsort
  * https://www.w3resource.com/javascript-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-6.php
  */
-class ShellSorter(pauseTime: Long) : Sorter(pauseTime) {
+class ShellSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.INSERTION
+    }
 
     private tailrec fun sort(values: IntArray, increment: Int): IntArray {
         if (increment == 0) {

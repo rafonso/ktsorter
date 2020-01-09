@@ -1,6 +1,10 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class CocktailSorter(pauseTime: Long) : Sorter(pauseTime) {
+class CocktailSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.EXCHANGE
+    }
 
     private fun moveToLeft(i: Int, right: Int, left: Int, values: IntArray): Int {
         var i1: Int = right

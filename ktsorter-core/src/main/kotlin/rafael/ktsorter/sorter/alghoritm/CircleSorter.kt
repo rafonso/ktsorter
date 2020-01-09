@@ -1,6 +1,10 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class CircleSorter(pauseTime: Long) : Sorter(pauseTime) {
+class CircleSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.SELECTION
+    }
 
     private fun sort(values: IntArray, low: Int, high: Int, nSwaps: Int): Int {
         val lo = low

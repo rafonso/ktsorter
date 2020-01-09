@@ -4,7 +4,11 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Heapsort
  * https://gist.github.com/gyoshev/4038839
  */
-class HeapSorter(pauseTime: Long) : Sorter(pauseTime) {
+class HeapSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.SELECTION
+    }
 
     private tailrec fun maxHeapfy(values: IntArray, _i: Int, length: Int) {
         var i = _i

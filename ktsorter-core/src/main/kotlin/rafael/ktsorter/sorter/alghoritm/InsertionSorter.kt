@@ -4,7 +4,11 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Insertion_sort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#insertionSort
  */
-class InsertionSorter(pauseTime: Long) : Sorter(pauseTime) {
+class InsertionSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+
+    companion object {
+        val TYPE = SortType.INSERTION
+    }
 
     private tailrec fun findInsertionPos(values: IntArray, value: Int, j: Int): Int {
         if(j == 0 || super.isLesserThan(values, j - 1, value)) {
