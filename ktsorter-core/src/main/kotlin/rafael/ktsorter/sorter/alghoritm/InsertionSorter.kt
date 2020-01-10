@@ -4,10 +4,10 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Insertion_sort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#insertionSort
  */
-class InsertionSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class InsertionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.INSERTION
+        val INFO = SortInfo("Insertion", SortType.INSERTION, AveragePerformance.N2)
     }
 
     private tailrec fun findInsertionPos(values: IntArray, value: Int, j: Int): Int {

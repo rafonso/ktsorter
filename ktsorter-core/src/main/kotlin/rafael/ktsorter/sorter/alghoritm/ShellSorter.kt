@@ -4,10 +4,10 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Shellsort
  * https://www.w3resource.com/javascript-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-6.php
  */
-class ShellSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class ShellSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.INSERTION
+        val INFO = SortInfo("Shell", SortType.INSERTION, AveragePerformance.N_LOG_N)
     }
 
     private fun shellSort1(values: IntArray, increment: Int, temp: Int, j: Int): Int {

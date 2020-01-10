@@ -4,10 +4,10 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Quicksort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#quickSort
  */
-class QuickSorter(pauseTime: Long) : QuickSorterBase(pauseTime, TYPE) {
+class QuickSorter(pauseTime: Long) : QuickSorterBase(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.EXCHANGE
+        val INFO = SortInfo("Quick", SortType.EXCHANGE, AveragePerformance.N_LOG_N)
     }
 
 }

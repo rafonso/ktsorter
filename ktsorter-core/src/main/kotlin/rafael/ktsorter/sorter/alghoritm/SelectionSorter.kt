@@ -4,10 +4,10 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Selection_sort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#selectionSort
  */
-class SelectionSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class SelectionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.SELECTION
+        val INFO = SortInfo("Selection", SortType.SELECTION, AveragePerformance.N2)
     }
 
     private tailrec fun getSelectedIndex(values: IntArray, j: Int, selectedIndex: Int): Int {

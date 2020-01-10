@@ -1,9 +1,9 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class GnomeSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class GnomeSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.EXCHANGE
+        val INFO = SortInfo("Gnome", SortType.EXCHANGE, AveragePerformance.N2)
     }
 
     private tailrec fun sort(values: IntArray, limit: Int, i: Int) {

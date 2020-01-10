@@ -1,9 +1,9 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class CocktailSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class CocktailSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.EXCHANGE
+        val INFO = SortInfo("Cocktail", SortType.EXCHANGE, AveragePerformance.N2)
     }
 
     private tailrec fun moveToLeft(i: Int, left: Int, values: IntArray): Int {

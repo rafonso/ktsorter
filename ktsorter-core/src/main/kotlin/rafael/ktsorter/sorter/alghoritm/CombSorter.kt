@@ -8,10 +8,10 @@ private const val SHRINK_FACTOR = 1.3
  * https://en.wikipedia.org/wiki/Comb_sort
  * https://gist.github.com/hiroshi-maybe/4701011
  */
-class CombSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class CombSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.EXCHANGE
+        val INFO = SortInfo("Comb", SortType.EXCHANGE, AveragePerformance.N2)
     }
 
     private fun newInverval(interval: Int) = max((interval / SHRINK_FACTOR).toInt(), 1)

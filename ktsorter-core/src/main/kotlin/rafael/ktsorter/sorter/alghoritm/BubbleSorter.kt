@@ -1,9 +1,9 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.EXCHANGE
+        val INFO = SortInfo("Bubble", SortType.EXCHANGE, AveragePerformance.N2)
     }
 
     private fun sortUntilI(values: IntArray, i: Int, j: Int) {

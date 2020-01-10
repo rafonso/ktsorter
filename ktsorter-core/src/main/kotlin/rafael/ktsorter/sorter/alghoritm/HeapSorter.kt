@@ -4,10 +4,10 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Heapsort
  * https://gist.github.com/gyoshev/4038839
  */
-class HeapSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
+class HeapSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
 
     companion object {
-        val TYPE = SortType.SELECTION
+        val INFO = SortInfo("Heap", SortType.SELECTION, AveragePerformance.N_LOG_N)
     }
 
     private tailrec fun maxHeapfy(values: IntArray, i: Int, length: Int) {
