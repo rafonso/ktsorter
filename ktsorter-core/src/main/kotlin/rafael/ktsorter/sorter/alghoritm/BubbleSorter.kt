@@ -6,14 +6,30 @@ class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
         val TYPE = SortType.EXCHANGE
     }
 
-    override fun process(values: IntArray): IntArray {
-        for (i in (values.size - 1) downTo 1) {
-            for (j in 1..i) {
-                if (isLesser(values, j, j - 1)) {
-                    super.swap(values, j - 1, j)
-                }
-            }
+    private fun sortUntilI(values: IntArray, i: Int, j: Int) {
+        if (j > i) {
+            return
         }
-        return values
+
+        if (isLesser(values, j, j - 1)) {
+            super.swap(values, j - 1, j)
+        }
+
+        sortUntilI(values, i, j + 1)
     }
+
+    private fun sort(values: IntArray, i: Int): IntArray {
+        if (i == 0) {
+            return values
+        }
+
+        sortUntilI(values, i, 1)
+
+        return sort(values, i - 1)
+    }
+
+    override fun process(values: IntArray): IntArray {
+        return sort(values, values.lastIndex)
+    }
+
 }

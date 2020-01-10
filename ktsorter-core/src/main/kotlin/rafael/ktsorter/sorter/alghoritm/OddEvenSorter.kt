@@ -9,22 +9,23 @@ class OddEvenSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
         val TYPE = SortType.EXCHANGE
     }
 
+    private tailrec fun sort(values: IntArray, i: Int, sorted: Boolean = true): Boolean {
+        if (i >= values.lastIndex) {
+            return sorted
+        }
+
+        val currentSort = if (super.isLesser(values, i + 1, i)) {
+            super.swap(values, i + 1, i)
+            false
+        } else sorted
+
+        return sort(values, i + 2, currentSort)
+    }
+
     override tailrec fun process(values: IntArray): IntArray {
-        var sorted = true
+        val oddsSorted  = sort(values, 0)
+        val evensSorted = sort(values, 1)
 
-        for (i in 1 until values.size - 1 step 2) {
-            if (super.isLesser(values, i + 1, i)) {
-                super.swap(values, i + 1, i)
-                sorted = false
-            }
-        }
-        for (i in values.indices step 2) {
-            if (super.isLesser(values, i + 1, i)) {
-                super.swap(values, i + 1, i)
-                sorted = false
-            }
-        }
-
-        return if (sorted) values else process(values)
+        return if (oddsSorted && evensSorted) values else process(values)
     }
 }

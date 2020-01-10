@@ -10,22 +10,34 @@ class ShellSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
         val TYPE = SortType.INSERTION
     }
 
+    private fun shellSort1(values: IntArray, increment: Int, temp: Int, j: Int): Int {
+        if (j < increment || super.isLesserThan(values, j - increment, temp)) {
+            return j
+        }
+
+        super.set(values, j, values[j - increment])
+
+        return shellSort1(values, increment, temp, j - increment)
+    }
+
+    private fun shellSort(values: IntArray, increment: Int, i: Int) {
+        if (i >= values.size) {
+            return
+        }
+
+        val temp = values[i]
+        val j = shellSort1(values, increment, temp, i)
+        super.set(values, j, temp)
+
+        shellSort(values, increment, i + 1)
+    }
+
     private tailrec fun sort(values: IntArray, increment: Int): IntArray {
         if (increment == 0) {
             return values
         }
 
-        for (i in increment until values.size) {
-            var j = i
-            val temp = values[i]
-
-            while (j >= increment && !super.isLesserThan(values, j - increment, temp)) {
-                super.set(values, j, values[j - increment])
-                j -= increment
-            }
-
-            super.set(values, j, temp)
-        }
+        shellSort(values, increment, increment)
 
         val newIncrement = if (increment == 2) 1 else (increment * 5.0 / 11).toInt()
         return sort(values, newIncrement)

@@ -10,28 +10,26 @@ class HeapSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
         val TYPE = SortType.SELECTION
     }
 
-    private tailrec fun maxHeapfy(values: IntArray, _i: Int, length: Int) {
-        var i = _i
-        while (true) {
-            val left = i * 2 + 1
-            val right = i * 2 + 2
-            var largest = i
+    private tailrec fun maxHeapfy(values: IntArray, i: Int, length: Int) {
+        val left = i * 2 + 1
+        val right = i * 2 + 2
+        var largest = i
 
-            if (left < length && super.isLesser(values, largest, left)) {
-                largest = left
-            }
-
-            if (right < length && super.isLesser(values, largest, right)) {
-                largest = right;
-            }
-
-            if (i == largest) {
-                break
-            }
-
-            super.swap(values, i, largest)
-            i = largest
+        if (left < length && super.isLesser(values, largest, left)) {
+            largest = left
         }
+
+        if (right < length && super.isLesser(values, largest, right)) {
+            largest = right
+        }
+
+        if (i == largest) {
+            return
+        }
+
+        super.swap(values, i, largest)
+
+        maxHeapfy(values, largest, length)
     }
 
     private fun heapfy(values: IntArray, lenght: Int) {
@@ -39,7 +37,6 @@ class HeapSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
             this.maxHeapfy(values, i, lenght)
         }
     }
-
 
     override fun process(values: IntArray): IntArray {
         this.heapfy(values, values.size)
@@ -49,7 +46,7 @@ class HeapSorter(pauseTime: Long) : Sorter(pauseTime, TYPE) {
             this.maxHeapfy(values, 0, i - 1)
         }
         // Workaround!
-        if(super.isLesser(values, 2, 1)) {
+        if (super.isLesser(values, 2, 1)) {
             super.swap(values, 2, 1)
         }
 
