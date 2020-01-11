@@ -77,8 +77,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             cmbQuantity = combobox {
                                 items = limitsValues.observable()
-                                converter =
-                                        DescriptableConverter(limitsValues)
+                                converter = DescriptableConverter(limitsValues)
                             }
                             label.labelFor = cmbQuantity
                         }
@@ -108,7 +107,13 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbSortingType = combobox {
-                                items = Sorters.values().toList().observable()
+                                items = Sorters.values()
+                                        .sortedWith(compareBy(
+                                                { -it.info.performance.ordinal },
+                                                { it.info.type },
+                                                { it.info.name }
+                                        ))
+                                        .toList().observable()
                                 converter = DescriptableConverter(Sorters.values())
                             }
                             label.labelFor = cmbSortingType
@@ -191,7 +196,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private fun initComponents() {
         initialValues.value = null
 
-        cmbQuantity.value = limitsValues.find { it.quantity == 50 }
+        cmbQuantity.value = limitsValues.filter { it.quantity > 50 }.minBy { it.quantity }
         cmbSequenceType.value = cmbSequenceType.items[0]
         cmbExihibitionType.value = cmbExihibitionType.items[0]
         cmbSortingType.value = cmbSortingType.items[0]
@@ -280,3 +285,4 @@ class MainView : View("KTSorter"), SortListener, Observer {
     }
 
 }
+
