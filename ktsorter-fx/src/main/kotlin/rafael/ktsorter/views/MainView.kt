@@ -222,9 +222,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
     }
 
     private fun startSorting() {
-        val sorter = cmbSortingType.value.generator(cmbIntervalCycles.value).also {
-            it.observers.add(this::invoke)
-        }
+        val sorter = cmbSortingType.value.generator(cmbIntervalCycles.value)
         sorter.subscribe(this)
 
         counterListener = CounterListener().also {
