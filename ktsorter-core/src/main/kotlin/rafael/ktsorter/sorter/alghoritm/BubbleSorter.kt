@@ -6,7 +6,7 @@ class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
         val INFO = SortInfo("Bubble", SortType.EXCHANGE, AveragePerformance.N2)
     }
 
-    private fun sortUntilI(values: IntArray, i: Int, j: Int) {
+    private tailrec fun sortUntilI(values: IntArray, i: Int, j: Int) {
         if (j > i) {
             return
         }
@@ -18,7 +18,7 @@ class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
         sortUntilI(values, i, j + 1)
     }
 
-    private fun sort(values: IntArray, i: Int): IntArray {
+    private tailrec fun sort(values: IntArray, i: Int): IntArray {
         if (i == 0) {
             return values
         }
@@ -28,8 +28,6 @@ class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
         return sort(values, i - 1)
     }
 
-    override fun process(values: IntArray): IntArray {
-        return sort(values, values.lastIndex)
-    }
+    override fun process(values: IntArray): IntArray = sort(values, values.lastIndex)
 
 }
