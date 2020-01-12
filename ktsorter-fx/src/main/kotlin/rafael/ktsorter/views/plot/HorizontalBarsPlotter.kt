@@ -11,7 +11,7 @@ class HorizontalBarsPlotter(region: Region, initialValues: IntArray, limits: Lim
     private var height: Double = 0.0
 
     private fun valueToBar(index: Int, value: Int): Rectangle =
-            Rectangle(0.0, indexToYRegion[indexToYRegion.size - index - 1], region.width, height).also { r ->
+            Rectangle(0.0, indexToYRegion[index], region.width, height).also { r ->
                 r.fill = colors[value - 1]
             }
 
