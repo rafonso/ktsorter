@@ -1,6 +1,10 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class CocktailSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+/**
+ * https://en.wikipedia.org/wiki/Cocktail_shaker_sort
+ * https://gist.github.com/zekeair/4498a1847a8742276107
+ */
+class CocktailSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Cocktail", SortType.EXCHANGE, AveragePerformance.N2)

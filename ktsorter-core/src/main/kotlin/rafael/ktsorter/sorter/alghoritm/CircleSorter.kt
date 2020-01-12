@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Cycle_sort
  * https://www.geeksforgeeks.org/circle-sort/
  */
-class CircleSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class CircleSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Circle", SortType.EXCHANGE, AveragePerformance.N2)

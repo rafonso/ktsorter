@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Pancake_sorting
  * https://rosettacode.org/wiki/Sorting_algorithms/Pancake_sort#JavaScript
  */
-class PancakeSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class PancakeSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Pancake", SortType.OTHER, AveragePerformance.N)

@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Insertion_sort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#insertionSort
  */
-class InsertionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class InsertionSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Insertion", SortType.INSERTION, AveragePerformance.N2)
@@ -20,18 +20,18 @@ class InsertionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
         return findInsertionPos(values, value, j - 1)
     }
 
-    private tailrec fun sort(values: IntArray, i: Int): IntArray {
-        if (i == values.size) {
+    private tailrec fun sort(values: IntArray, begin: Int, end: Int): IntArray {
+        if (begin >= end) {
             return values
         }
 
-        val value = values[i]
-        val j = findInsertionPos(values, value, i)
+        val value = values[begin]
+        val j = findInsertionPos(values, value, begin)
         super.set(values, j, value)
 
-        return sort(values, i + 1)
+        return sort(values, begin + 1, end)
     }
 
-    override fun process(values: IntArray): IntArray = sort(values, 1)
+    override fun process(values: IntArray): IntArray = sort(values, 1, values.size)
 
 }

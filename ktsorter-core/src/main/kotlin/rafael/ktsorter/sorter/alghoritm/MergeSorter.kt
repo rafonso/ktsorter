@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Merge_sort
  * http://andreinc.net/2010/12/22/the-merge-sort-algorithm-implementation-in-java/
  */
-class MergeSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class MergeSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Merge", SortType.MERGE, AveragePerformance.N_LOG_N)

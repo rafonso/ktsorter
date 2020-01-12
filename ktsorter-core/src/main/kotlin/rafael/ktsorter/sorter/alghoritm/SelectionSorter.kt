@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Selection_sort
  * https://khan4019.github.io/front-end-Interview-Questions/sort.html#selectionSort
  */
-class SelectionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class SelectionSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Selection", SortType.SELECTION, AveragePerformance.N2)
@@ -26,7 +26,7 @@ class SelectionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
         }
 
         val selectedIndex = getSelectedIndex(values, i + 1, i)
-        if(i != selectedIndex) {
+        if (i != selectedIndex) {
             super.swap(values, i, selectedIndex)
         }
 
@@ -34,4 +34,5 @@ class SelectionSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
     }
 
     override fun process(values: IntArray): IntArray = sort(0, values)
+
 }

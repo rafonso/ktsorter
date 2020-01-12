@@ -1,6 +1,6 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class BubbleSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class BubbleSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Bubble", SortType.EXCHANGE, AveragePerformance.N2)

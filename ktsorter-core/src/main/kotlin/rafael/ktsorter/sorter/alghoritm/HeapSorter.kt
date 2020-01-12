@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Heapsort
  * https://gist.github.com/gyoshev/4038839
  */
-class HeapSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class HeapSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Heap", SortType.SELECTION, AveragePerformance.N_LOG_N)
@@ -38,17 +38,21 @@ class HeapSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
         }
     }
 
-    override fun process(values: IntArray): IntArray {
-        this.heapfy(values, values.size)
+    internal fun sort(values: IntArray, begin: Int, endExclusive: Int) {
+        this.heapfy(values, endExclusive - begin)
 
         for (i in values.lastIndex downTo 1) {
-            super.swap(values, i, 0)
-            this.maxHeapfy(values, 0, i - 1)
+            super.swap(values, i, begin)
+            this.maxHeapfy(values, begin, i - 1)
         }
         // Workaround!
-        if (super.isLesser(values, 2, 1)) {
-            super.swap(values, 2, 1)
+        if (super.isLesser(values, begin + 2, begin + 1)) {
+            super.swap(values, begin + 2, begin + 1)
         }
+    }
+
+    override fun process(values: IntArray): IntArray {
+        sort(values, 0, values.size)
 
         return values
     }

@@ -4,7 +4,7 @@ import rafael.ktsorter.sorter.events.*
 
 internal class InterruptionThrowable : Throwable()
 
-abstract class Sorter(private val pauseTime: Long, val type: SortType) {
+abstract class Sorter(private val pauseTime: Long) {
 
     private val sortListeners = mutableListOf<SortListener>()
 

@@ -3,7 +3,7 @@ package rafael.ktsorter.sorter.alghoritm
 /**
  * https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort
  */
-class OddEvenSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class OddEvenSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Odd Even", SortType.EXCHANGE, AveragePerformance.N2)

@@ -1,6 +1,6 @@
 package rafael.ktsorter.sorter.alghoritm
 
-class GnomeSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class GnomeSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Gnome", SortType.EXCHANGE, AveragePerformance.N2)

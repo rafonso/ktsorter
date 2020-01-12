@@ -8,7 +8,7 @@ private const val SHRINK_FACTOR = 1.3
  * https://en.wikipedia.org/wiki/Comb_sort
  * https://gist.github.com/hiroshi-maybe/4701011
  */
-class CombSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class CombSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Comb", SortType.EXCHANGE, AveragePerformance.N2)

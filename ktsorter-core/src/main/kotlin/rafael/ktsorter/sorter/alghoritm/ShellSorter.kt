@@ -4,7 +4,7 @@ package rafael.ktsorter.sorter.alghoritm
  * https://en.wikipedia.org/wiki/Shellsort
  * https://www.w3resource.com/javascript-exercises/searching-and-sorting-algorithm/searching-and-sorting-algorithm-exercise-6.php
  */
-class ShellSorter(pauseTime: Long) : Sorter(pauseTime, INFO.type) {
+class ShellSorter(pauseTime: Long) : Sorter(pauseTime) {
 
     companion object {
         val INFO = SortInfo("Shell", SortType.INSERTION, AveragePerformance.N_LOG_N)
