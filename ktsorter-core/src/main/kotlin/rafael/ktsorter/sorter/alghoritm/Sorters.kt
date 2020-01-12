@@ -10,7 +10,7 @@ enum class Sorters(val info: SortInfo, val generator: (Long) -> Sorter) : Descri
     BUBBLE      (BubbleSorter      .INFO, { BubbleSorter       (it)}),
     COCKTAIL    (CocktailSorter    .INFO, { CocktailSorter     (it)}),
     ODD_EVEN    (OddEvenSorter     .INFO, { OddEvenSorter      (it)}),
-//  CIRCLE      (CircleSorter      .INFO, { CircleSorter       (it)}),
+    CIRCLE      (CircleSorter      .INFO, { CircleSorter       (it)}),
     GNOME       (GnomeSorter       .INFO, { GnomeSorter        (it)}),
     COMB        (CombSorter        .INFO, { CombSorter         (it)}),
     SHELL       (ShellSorter       .INFO, { ShellSorter        (it)}),
