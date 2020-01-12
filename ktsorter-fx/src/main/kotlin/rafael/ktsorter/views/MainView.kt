@@ -43,6 +43,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private lateinit var btnGenerateNumbers : Button
     private lateinit var btnSort            : Button
     private lateinit var btnReset           : Button
+    private lateinit var btnStop            : Button
     private lateinit var txfComparsions     : TextField
     private lateinit var txfSwaps           : TextField
     private lateinit var txfTime            : TextField
@@ -153,6 +154,10 @@ class MainView : View("KTSorter"), SortListener, Observer {
                         onAction = EventHandler { initComponents() }
                         disableProperty().bind(runningState.isEqualTo(RunningState.RUNNING))
                     }
+                    btnStop = button("Stop") {
+                        addClass(Styles.buttons)
+                        disableProperty().bind(runningState.isNotEqualTo(RunningState.RUNNING))
+                    }
                     separator {
                         addClass(Styles.pad)
                     }
@@ -224,6 +229,10 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private fun startSorting() {
         val sorter = cmbSortingType.value.generator(cmbIntervalCycles.value)
         sorter.subscribe(this)
+        btnStop.onAction = EventHandler {
+            sorter.requestInteruption()
+            btnStop.onAction = null
+        }
 
         counterListener = CounterListener().also {
             sorter.subscribe(it)
@@ -237,11 +246,19 @@ class MainView : View("KTSorter"), SortListener, Observer {
     override fun onEvent(event: SortEvent) {
         Platform.runLater {
             when (event) {
-                is ErrorEvent -> {
+                is ErrorEvent        -> {
                     showError(event.error)
                     runningState.value = RunningState.CONCLUDED
                 }
-                is EndEvent   -> runningState.value = RunningState.CONCLUDED
+                is EndEvent          -> {
+                    runningState.value = RunningState.CONCLUDED
+                }
+                is InterruptionEvent -> {
+                    txfComparsions.text = "Interrupted by User"
+                    txfTime.text = ""
+                    txfSwaps.text = ""
+                    runningState.value = RunningState.CONCLUDED
+                }
             }
         }
     }

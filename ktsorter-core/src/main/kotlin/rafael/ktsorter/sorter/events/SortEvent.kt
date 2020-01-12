@@ -3,7 +3,7 @@ package rafael.ktsorter.sorter.events
 import java.time.LocalDateTime
 
 enum class EventType(val isFinal: Boolean = false) {
-    IDLE, START, COMPARSION, SWAP, SET, ENDED(true), ERROR(true)
+    IDLE, START, COMPARSION, SWAP, SET, ENDED(true), ERROR(true), INTERRUPTED(true)
 }
 
 sealed class SortEvent(val type: EventType) {
@@ -52,3 +52,11 @@ data class EndEvent(override val values: List<Int>) :
 
 data class ErrorEvent(val error: Exception) :
         SortEvent(EventType.ERROR)
+
+data class InterruptionEvent(override val values: List<Int>) :
+        BasicSortEvent(EventType.INTERRUPTED) {
+
+    override val positions
+        get() = emptyList<Int>()
+
+}
