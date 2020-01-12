@@ -19,6 +19,7 @@ enum class Sorters(val info: SortInfo, val generator: (Long) -> Sorter) : Descri
     QUICKSORT   (QuickSorter       .INFO, { QuickSorter        (it)}),
     QUICKINSERT (QuickInsertSorter .INFO, { QuickInsertSorter  (it)}),
     HEAP        (HeapSorter        .INFO, { HeapSorter         (it)}),
+    PANCAKE     (PancakeSorter     .INFO, { PancakeSorter      (it)}),
     // @formatter:on
     ;
 
