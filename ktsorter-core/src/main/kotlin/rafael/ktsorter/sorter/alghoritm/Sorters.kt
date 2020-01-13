@@ -21,6 +21,7 @@ enum class Sorters(val info: SortInfo, val generator: (Long) -> Sorter) : Descri
     HEAP        (HeapSorter        .INFO, { HeapSorter         (it)}),
     PANCAKE     (PancakeSorter     .INFO, { PancakeSorter      (it)}),
     MERGE       (MergeSorter       .INFO, { MergeSorter        (it)}),
+    RADIX       (RadixSorter       .INFO, { RadixSorter        (it)}),
     // @formatter:on
     ;
 
