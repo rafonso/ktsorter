@@ -16,7 +16,7 @@ enum class Sorters(val info: SortInfo, val generator: (Long) -> Sorter) : Descri
     SHELL       (ShellSorter       .INFO, { ShellSorter        (it)}),
     INSERTION   (InsertionSorter   .INFO, { InsertionSorter    (it)}),
     SELECTION   (SelectionSorter   .INFO, { SelectionSorter    (it)}),
-    QUICKSORT   (QuickSorter       .INFO, { QuickSorter        (it)}),
+    QUICK       (QuickSorter       .INFO, { QuickSorter        (it)}),
     QUICKINSERT (QuickInsertSorter .INFO, { QuickInsertSorter  (it)}),
     HEAP        (HeapSorter        .INFO, { HeapSorter         (it)}),
     PANCAKE     (PancakeSorter     .INFO, { PancakeSorter      (it)}),

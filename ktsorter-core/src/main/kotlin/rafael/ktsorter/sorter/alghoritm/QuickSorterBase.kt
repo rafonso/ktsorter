@@ -2,8 +2,8 @@ package rafael.ktsorter.sorter.alghoritm
 
 abstract class QuickSorterBase(pauseTime: Long) : Sorter(pauseTime) {
 
-    private tailrec fun partition(values: IntArray, pivotValue: Int, right: Int, i: Int, partitionIndex: Int): Int {
-        if (i >= right) {
+    private tailrec fun partition(values: IntArray, pivotValue: Int, end: Int, i: Int, partitionIndex: Int): Int {
+        if (i >= end) {
             return partitionIndex
         }
 
@@ -14,16 +14,16 @@ abstract class QuickSorterBase(pauseTime: Long) : Sorter(pauseTime) {
             partitionIndex
         }
 
-        return partition(values, pivotValue, right, i + 1, nextPartitionIndex)
+        return partition(values, pivotValue, end, i + 1, nextPartitionIndex)
     }
 
-    internal open fun sort(values: IntArray, left: Int, right: Int): IntArray {
-        if (left < right) {
-            val partitionIndex = this.partition(values, values[right], right, left, left)
-            super.swap(values, right, partitionIndex)
+    internal open fun sort(values: IntArray, begin: Int, end: Int): IntArray {
+        if (begin < end) {
+            val partitionIndex = this.partition(values, values[end], end, begin, begin)
+            super.swap(values, end, partitionIndex)
 
-            this.sort(values, left, partitionIndex - 1)
-            this.sort(values, partitionIndex + 1, right)
+            this.sort(values, begin, partitionIndex - 1)
+            this.sort(values, partitionIndex + 1, end)
         }
 
         return values

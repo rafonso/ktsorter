@@ -10,7 +10,7 @@ class ShellSorter(pauseTime: Long) : Sorter(pauseTime) {
         val INFO = SortInfo("Shell", SortType.INSERTION, AveragePerformance.N_LOG_N)
     }
 
-    private fun shellSort1(values: IntArray, increment: Int, temp: Int, j: Int): Int {
+    private tailrec fun shellSort1(values: IntArray, increment: Int, temp: Int, j: Int): Int {
         if (j < increment || super.isLesserThan(values, j - increment, temp)) {
             return j
         }
@@ -20,7 +20,7 @@ class ShellSorter(pauseTime: Long) : Sorter(pauseTime) {
         return shellSort1(values, increment, temp, j - increment)
     }
 
-    private fun shellSort(values: IntArray, increment: Int, i: Int) {
+    private tailrec fun shellSort(values: IntArray, increment: Int, i: Int) {
         if (i >= values.size) {
             return
         }

@@ -15,7 +15,7 @@ class PancakeSorter(pauseTime: Long) : Sorter(pauseTime) {
             return maxIdx
         }
 
-        val nextMaxIdx = if (!super.isLesser(values, j, maxIdx)) j else maxIdx
+        val nextMaxIdx = if (super.isLesser(values, j, maxIdx)) maxIdx else j
 
         return findMaxIdx(values, n, j + 1, nextMaxIdx)
     }
@@ -30,9 +30,9 @@ class PancakeSorter(pauseTime: Long) : Sorter(pauseTime) {
         flip(values, i + 1, j - 1)
     }
 
-    private tailrec fun sort(values: IntArray, i: Int) {
+    private tailrec fun sort(values: IntArray, i: Int): IntArray {
         if (i == 0) {
-            return
+            return values
         }
 
         val maxIdx = findMaxIdx(values, i)
@@ -40,12 +40,9 @@ class PancakeSorter(pauseTime: Long) : Sorter(pauseTime) {
             flip(values, maxIdx, i)
         }
 
-        sort(values, i - 1)
+        return sort(values, i - 1)
     }
 
-    override fun process(values: IntArray): IntArray {
-        sort(values, values.lastIndex)
+    override fun process(values: IntArray): IntArray = sort(values, values.lastIndex)
 
-        return values
-    }
 }

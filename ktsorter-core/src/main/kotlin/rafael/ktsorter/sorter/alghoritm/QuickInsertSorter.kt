@@ -33,7 +33,7 @@ class QuickInsertSorter(pauseTime: Long) : QuickSorterBase(pauseTime) {
         return executeInsert(values, end, i + 1)
     }
 
-    override fun sort(values: IntArray, left: Int, right: Int): IntArray =
-            if (right - left >= MIN_SIZE) super.sort(values, left, right) else executeInsert(values, right + 1, left + 1)
+    override fun sort(values: IntArray, begin: Int, end: Int): IntArray =
+            if (end - begin >= MIN_SIZE) super.sort(values, begin, end) else executeInsert(values, end + 1, begin + 1)
 
 }
