@@ -9,6 +9,18 @@ enum class Plotters(override val description: String) : Descriptable {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             BarsPlotter(region, initialValues, limits)
     },
+    HORIZONTAL_IMAGE("Horizontal Image") {
+        override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
+            HorizontalImagePlotter(region, initialValues, limits)
+    },
+    VERTICAL_IMAGE("Vertical Image") {
+        override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
+            VerticalImagePlotter(region, initialValues, limits)
+    },
+    TILES_IMAGE("Tiles Image") {
+        override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
+            TilesImagePlotter(region, initialValues, limits)
+    },
     VERTICAL_BARS("Vertical Bars") {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             VerticalBarsPlotter(region, initialValues, limits)
