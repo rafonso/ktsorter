@@ -1,5 +1,6 @@
 package rafael.ktsorter.views.plot
 
+import javafx.scene.Node
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
 import kotlin.math.cos
@@ -24,13 +25,13 @@ data class PolarCoordinate(val radius: Double, val theta: Double) {
 
 }
 
-internal fun basicPlotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType, limits: Limits) {
+internal fun basicPlotPositions(shapes: List<Node>, positions: List<Int>, eventType: EventType, limits: Limits) {
     when (eventType) {
-        EventType.COMPARSION          -> positions.map { shapes[it] }.forEach { shape ->
+        EventType.COMPARSION          -> positions.map { shapes[it] }.map { it as Shape }.forEach { shape ->
             shape.strokeWidth = limits.radius / 2
             shape.strokeDashArray.addAll(0.6, 0.2)
         }
-        EventType.SWAP, EventType.SET -> positions.map { shapes[it] }.forEach { shape ->
+        EventType.SWAP, EventType.SET -> positions.map { shapes[it] }.map { it as Shape }.forEach { shape ->
             shape.strokeWidth = limits.radius / 2
             shape.strokeDashArray.addAll(0.2, 0.2)
         }

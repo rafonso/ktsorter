@@ -1,5 +1,6 @@
 package rafael.ktsorter.views.plot
 
+import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
@@ -28,7 +29,7 @@ class TilesPlotter(region: Region, initialValues: IntArray, limits: Limits) : Pl
 
     override fun plotValues(values: List<Int>): List<Shape> = values.mapIndexed(this::valueToTile)
 
-    override fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType) {
+    override fun plotPositions(shapes: List<Node>, positions: List<Int>, eventType: EventType) {
         basicPlotPositions(shapes, positions, eventType, limits)
     }
 }

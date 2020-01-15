@@ -1,5 +1,6 @@
 package rafael.ktsorter.views.plot
 
+import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
@@ -21,12 +22,12 @@ abstract class Plotter(protected val region: Region, val initialValues: IntArray
 
     protected abstract fun initPlotter()
 
-    protected abstract fun plotValues(values: List<Int>): List<Shape>
+    protected abstract fun plotValues(values: List<Int>): List<Node>
 
-    protected abstract fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType)
+    protected abstract fun plotPositions(shapes: List<Node>, positions: List<Int>, eventType: EventType)
 
     fun plot(values: List<Int>, positions: List<Int>, eventType: EventType) {
-        region.getChildList()?.removeIf { n -> n is Shape }
+        region.getChildList()?.removeIf { n -> n is Node }
 
         val shapes = plotValues(values)
         plotPositions(shapes, positions, eventType)

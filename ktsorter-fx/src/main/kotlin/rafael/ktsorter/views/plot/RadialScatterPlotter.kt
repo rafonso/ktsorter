@@ -1,5 +1,6 @@
 package rafael.ktsorter.views.plot
 
+import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
@@ -43,7 +44,7 @@ class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limi
                     .map { (coord, color) -> Pair(coord + centerRegion, color) }
                     .map { (coord, color) -> this.toCircle(coord, color) }.toList()
 
-    override fun plotPositions(shapes: List<Shape>, positions: List<Int>, eventType: EventType) {
+    override fun plotPositions(shapes: List<Node>, positions: List<Int>, eventType: EventType) {
         basicPlotPositions(shapes, positions, eventType, limits)
     }
 
