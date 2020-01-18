@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.image.PixelReader
 import javafx.scene.layout.Region
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
 
 abstract class ImagePlotter(region: Region, initialValues: IntArray, limits: Limits) :
     Plotter(region, initialValues, limits) {
@@ -27,7 +28,7 @@ abstract class ImagePlotter(region: Region, initialValues: IntArray, limits: Lim
     }
 
     override fun plotValues(values: List<Int>): List<Node> = values.mapIndexed { index, value ->
-        tiles[value].also { tile ->
+        tiles[value - 1].also { tile ->
             moveImage(tile, index)
         }
     }

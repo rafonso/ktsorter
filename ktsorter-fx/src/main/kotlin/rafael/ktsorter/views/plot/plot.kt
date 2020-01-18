@@ -3,6 +3,7 @@ package rafael.ktsorter.views.plot
 import javafx.scene.Node
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
 import kotlin.math.cos
 import kotlin.math.sin
 

@@ -2,6 +2,7 @@ package rafael.ktsorter.views
 
 import javafx.application.Platform
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -16,10 +17,8 @@ import rafael.ktsorter.sorter.alghoritm.Sorters
 import rafael.ktsorter.sorter.events.*
 import rafael.ktsorter.sorter.events.SortEvent
 import rafael.ktsorter.util.Observer
-import rafael.ktsorter.views.plot.Limits
 import rafael.ktsorter.views.plot.Plotter
 import rafael.ktsorter.views.plot.Plotters
-import rafael.ktsorter.views.plot.limitsValues
 import tornadofx.*
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -63,6 +62,14 @@ class MainView : View("KTSorter"), SortListener, Observer {
 
     private var counterListener: CounterListener? = null
 
+    private val imageExihibitionSelected = SimpleBooleanProperty(false).apply {
+        onChange {
+            val imageSelector: (Plotters) -> Boolean = if(this.value) { _ -> true } else {p -> !p.isImage}
+            cmbExihibitionType.items = Plotters.values().filter(imageSelector) .toList().observable()
+        }
+    }
+
+
     init {
         super.primaryStage.isResizable = false
     }
@@ -79,6 +86,9 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             cmbQuantity = combobox {
                                 items = limitsValues.observable()
                                 converter = DescriptableConverter(limitsValues)
+                                onAction = EventHandler {
+                                    imageExihibitionSelected.value = value.allowedForImages
+                                }
                             }
                             label.labelFor = cmbQuantity
                         }

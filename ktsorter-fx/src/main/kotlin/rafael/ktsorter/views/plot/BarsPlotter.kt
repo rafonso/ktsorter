@@ -6,6 +6,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
 
 class BarsPlotter(region: Region, initialValues: IntArray, limits: Limits) : Plotter(region, initialValues, limits) {
 

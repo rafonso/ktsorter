@@ -2,22 +2,23 @@ package rafael.ktsorter.views.plot
 
 import javafx.scene.layout.Region
 import rafael.ktsorter.util.Descriptable
+import rafael.ktsorter.views.Limits
 
-enum class Plotters(override val description: String) : Descriptable {
+enum class Plotters(override val description: String, val isImage: Boolean = false) : Descriptable {
 
     BARS("Bars") {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             BarsPlotter(region, initialValues, limits)
     },
-    HORIZONTAL_IMAGE("Horizontal Image") {
+    HORIZONTAL_IMAGE("Horizontal Image", true) {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             HorizontalImagePlotter(region, initialValues, limits)
     },
-    VERTICAL_IMAGE("Vertical Image") {
+    VERTICAL_IMAGE("Vertical Image", true) {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             VerticalImagePlotter(region, initialValues, limits)
     },
-    TILES_IMAGE("Tiles Image") {
+    TILES_IMAGE("Tiles Image", true) {
         override fun createPlotter(region: Region, initialValues: IntArray, limits: Limits): Plotter =
             TilesImagePlotter(region, initialValues, limits)
     },

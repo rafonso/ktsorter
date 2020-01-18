@@ -5,6 +5,7 @@ import javafx.scene.layout.Region
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
 
 class HorizontalBarsPlotter(region: Region, initialValues: IntArray, limits: Limits) : Plotter(region, initialValues, limits) {
 

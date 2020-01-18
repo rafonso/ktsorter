@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.image.PixelReader
 import javafx.scene.image.WritableImage
 import javafx.scene.layout.Region
+import rafael.ktsorter.views.Limits
 
 class VerticalImagePlotter(region: Region, initialValues: IntArray, limits: Limits) :
     ImagePlotter(region, initialValues, limits) {
@@ -16,7 +17,7 @@ class VerticalImagePlotter(region: Region, initialValues: IntArray, limits: Limi
     override fun prepareImage(originalImage: Image) {
         tileHeight = originalImage.height.toInt()
         tileWidth = originalImage.width.toInt() / limits.quantity
-        colValues = (0..limits.quantity).map { it * tileWidth.toDouble() }
+        colValues = (0 until limits.quantity).map { it * tileWidth.toDouble() }
     }
 
     override fun pixelToTiles(reader: PixelReader): List<Image> =

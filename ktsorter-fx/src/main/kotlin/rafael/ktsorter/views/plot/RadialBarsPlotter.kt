@@ -6,6 +6,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Line
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
 import kotlin.math.*
 
 class RadialBarsPlotter(region: Region, initialValues: IntArray, limits: Limits) :

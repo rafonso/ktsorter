@@ -4,8 +4,11 @@ import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
+import javafx.scene.shape.Line
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
+import tornadofx.add
 import kotlin.math.*
 
 class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limits) :
@@ -38,14 +41,26 @@ class RadialScatterPlotter(region: Region, initialValues: IntArray, limits: Limi
     }
 
     override fun plotValues(values: List<Int>): List<Shape> =
-            values.asSequence().mapIndexed(this::valueToRadial)
-                    .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
-                    .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, - coord.y), color) }
-                    .map { (coord, color) -> Pair(coord + centerRegion, color) }
-                    .map { (coord, color) -> this.toCircle(coord, color) }.toList()
+        values.asSequence().mapIndexed(this::valueToRadial)
+            .map { (polarCoord, color) -> Pair(polarCoord.cartesianCoordinate, color) }
+            .map { (coord, color) -> Pair(CartesianCoordinate(coord.x, -coord.y), color) }
+            .map { (coord, color) -> Pair(coord + centerRegion, color) }
+            .map { (coord, color) -> this.toCircle(coord, color) }.toList()
 
     override fun plotPositions(shapes: List<Node>, positions: List<Int>, eventType: EventType) {
-        basicPlotPositions(shapes, positions, eventType, limits)
+        positions
+            .map { shapes[it] as Circle }
+            .map { circle ->
+                Line(centerRegion.x, centerRegion.y, circle.centerX, circle.centerY).apply {
+                    stroke = when (eventType) {
+                        EventType.SET, EventType.SWAP -> Color.BLACK
+                        EventType.COMPARSION -> Color.LIGHTGREY
+                        else -> Color.TRANSPARENT
+                    }
+                    strokeWidth = limits.radius
+                }
+            }
+            .forEach { line -> region.add(line) }
     }
 
 }

@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.layout.Region
 import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
+import rafael.ktsorter.views.Limits
 import tornadofx.add
 import tornadofx.getChildList
 
@@ -27,7 +28,7 @@ abstract class Plotter(protected val region: Region, val initialValues: IntArray
     protected abstract fun plotPositions(shapes: List<Node>, positions: List<Int>, eventType: EventType)
 
     fun plot(values: List<Int>, positions: List<Int>, eventType: EventType) {
-        region.getChildList()?.removeIf { n -> n is Node }
+        region.getChildList()?.clear()
 
         val shapes = plotValues(values)
         plotPositions(shapes, positions, eventType)
