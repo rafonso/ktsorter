@@ -58,14 +58,15 @@ class MainView : View("KTSorter"), SortListener, Observer {
         }
     }
 
-    private val runningState: ObjectProperty<RunningState> = SimpleObjectProperty<RunningState>(RunningState.WAITING_DATA)
+    private val runningState: ObjectProperty<RunningState> =
+            SimpleObjectProperty<RunningState>(RunningState.WAITING_DATA)
 
     private var counterListener: CounterListener? = null
 
     private val imageExihibitionSelected = SimpleBooleanProperty(false).apply {
         onChange {
-            val imageSelector: (Plotters) -> Boolean = if(this.value) { _ -> true } else {p -> !p.isImage}
-            cmbExihibitionType.items = Plotters.values().filter(imageSelector) .toList().observable()
+            val imageSelector: (Plotters) -> Boolean = if (this.value) { _ -> true } else { p -> !p.isImage }
+            cmbExihibitionType.items = Plotters.values().filter(imageSelector).toList().observable()
         }
     }
 
@@ -210,17 +211,17 @@ class MainView : View("KTSorter"), SortListener, Observer {
 
     private fun initComponents() {
         initialValues.value = null
-
-        cmbQuantity.value = limitsValues.filter { it.quantity > 50 }.minBy { it.quantity }
-        cmbSequenceType.value = cmbSequenceType.items[0]
-        cmbExihibitionType.value = cmbExihibitionType.items[0]
-        cmbSortingType.value = cmbSortingType.items[0]
-        cmbIntervalCycles.value = 1
-        chbSound.isSelected = true
-        txfComparsions.text = null
-        txfSwaps.text = null
-        txfTime.text = null
-
+        // @formatter:off
+        cmbQuantity         .value      = limitsValues.filter { it.quantity > 50 }.minBy { it.quantity }
+        cmbSequenceType     .value      = cmbSequenceType       .items[0]
+        cmbExihibitionType  .value      = cmbExihibitionType    .items[0]
+        cmbSortingType      .value      = cmbSortingType        .items[0]
+        cmbIntervalCycles   .value      = 1
+        chbSound            .isSelected = true
+        txfComparsions      .text       = ""
+        txfSwaps            .text       = ""
+        txfTime             .text       = ""
+        // @formatter:on
         sortPane.children.removeIf { n -> n is Shape }
     }
 
@@ -280,7 +281,11 @@ class MainView : View("KTSorter"), SortListener, Observer {
                 CounterListener.COMPARSIONS -> txfComparsions.text = (value as Int).toString()
                 CounterListener.DURATION    -> {
                     val duration = (value as Duration)
-                    txfTime.text = "%02d:%02d.%03d".format(duration.toMinutesPart(), duration.toSecondsPart(), duration.toMillisPart())
+                    txfTime.text = "%02d:%02d.%03d".format(
+                            duration.toMinutesPart(),
+                            duration.toSecondsPart(),
+                            duration.toMillisPart()
+                    )
                 }
                 CounterListener.SWAPS       -> txfSwaps.text = (value as Int).toString()
             }

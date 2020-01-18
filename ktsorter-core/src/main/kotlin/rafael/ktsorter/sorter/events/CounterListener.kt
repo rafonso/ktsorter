@@ -46,9 +46,9 @@ class CounterListener : SortListener, Observable {
     override fun onEvent(event: SortEvent) {
         when (event) {
             is StartEvent      -> _t0 = event.date
-            is ComparsionEvent -> _comparsions ++
-            is SwapEvent       -> _swaps ++
-            is SetEvent        -> _swaps ++
+            is ComparsionEvent -> _comparsions++
+            is SwapEvent       -> _swaps++
+            is SetEvent        -> _swaps++
 
         }
         if (event !is IdleEvent) {

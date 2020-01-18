@@ -8,15 +8,17 @@ import tornadofx.*
 
 class Styles : Stylesheet() {
     companion object {
-        val mainScreen by cssclass()
-        val pad  by cssclass()
-        val content by cssclass()
-        val heading by cssclass()
-        val controlsFields by cssclass()
-        val labels  by cssclass()
-        val buttons  by cssclass()
-        val texts by cssclass()
-        val canvases by cssclass()
+        // @formatter:off
+        val mainScreen      by cssclass()
+        val pad             by cssclass()
+        val content         by cssclass()
+        val heading         by cssclass()
+        val controlsFields  by cssclass()
+        val labels          by cssclass()
+        val buttons         by cssclass()
+        val texts           by cssclass()
+        val canvases        by cssclass()
+        // @formatter:on
     }
 
     init {
@@ -45,9 +47,9 @@ class Styles : Stylesheet() {
                 alignment = Pos.CENTER_RIGHT
             }
             canvases {
-                backgroundColor= multi(Color.WHITE)
+                backgroundColor = multi(Color.WHITE)
 //                borderInsets= multi(box((10.px)))
-                padding= box((10.px))
+                padding = box((10.px))
             }
 
 

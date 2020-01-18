@@ -75,14 +75,14 @@ enum class NumberGenerator(override val description: String) : Descriptable {
             val factor = signal * randomFactor * max * Random.nextDouble()
             val value = (pos + factor).toInt()
             return when {
-                value < 1 -> 1
+                value < 1   -> 1
                 value > max -> max
-                else -> value
+                else        -> value
             }
         }
 
         override fun generate(n: Int): IntArray =
-            (0 until n).map { generateValue(it + 1, n) }.toIntArray()
+                (0 until n).map { generateValue(it + 1, n) }.toIntArray()
 
     }
     ;
