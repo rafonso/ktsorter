@@ -2,11 +2,9 @@ package rafael.ktsorter.views.plot
 
 import javafx.scene.Node
 import javafx.scene.layout.Region
-import javafx.scene.shape.Shape
 import rafael.ktsorter.sorter.events.EventType
 import rafael.ktsorter.views.Limits
-import tornadofx.add
-import tornadofx.getChildList
+import tornadofx.*
 
 abstract class Plotter(protected val region: Region, val initialValues: IntArray, protected val limits: Limits) {
 

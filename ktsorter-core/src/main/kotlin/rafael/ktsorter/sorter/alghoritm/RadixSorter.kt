@@ -41,6 +41,6 @@ class RadixSorter(pauseTime: Long) : Sorter(pauseTime) {
         return sort(values, max, exp * 10)
     }
 
-    override fun process(values: IntArray): IntArray = sort(values, values.max()!!, 1)
+    override fun process(values: IntArray): IntArray = sort(values, values.maxOrNull()!!, 1)
 
 }

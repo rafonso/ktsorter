@@ -24,14 +24,6 @@ private class CounterObserver(var comparsions: Int = 0, var swaps: Int = 0, var 
 
 }
 
-private class ErrorObserver(var error: Exception? = null) {
-
-    fun onchange(id: String, value: Any?) {
-
-    }
-
-}
-
 
 internal class CounterListenerTest {
 

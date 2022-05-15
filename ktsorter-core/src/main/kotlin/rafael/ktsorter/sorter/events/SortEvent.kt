@@ -2,7 +2,7 @@ package rafael.ktsorter.sorter.events
 
 import java.time.LocalDateTime
 
-enum class EventType(val isFinal: Boolean = false) {
+enum class EventType(@Suppress("unused") val isFinal: Boolean = false) {
     IDLE, START, COMPARSION, SWAP, SET, ENDED(true), ERROR(true), INTERRUPTED(true)
 }
 

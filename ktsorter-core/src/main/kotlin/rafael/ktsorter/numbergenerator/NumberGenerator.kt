@@ -48,7 +48,7 @@ enum class NumberGenerator(override val description: String) : Descriptable {
         }
 
         private tailrec fun normalize(values: MutableList<List<Int>>, quantity: Int, i: Int): List<Int> {
-            val totalSize = values.map { l -> l.size }.sum()
+            val totalSize = values.sumOf { l -> l.size }
             if (totalSize == quantity || i == 4) {
                 return values.flatten()
             }

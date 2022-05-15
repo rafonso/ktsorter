@@ -49,7 +49,7 @@ class CounterListener : SortListener, Observable {
             is ComparsionEvent -> _comparsions++
             is SwapEvent       -> _swaps++
             is SetEvent        -> _swaps++
-
+            else               -> {}
         }
         if (event !is IdleEvent) {
             _duration = Duration.between(_t0, event.date)

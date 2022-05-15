@@ -59,14 +59,14 @@ class MainView : View("KTSorter"), SortListener, Observer {
     }
 
     private val runningState: ObjectProperty<RunningState> =
-            SimpleObjectProperty<RunningState>(RunningState.WAITING_DATA)
+            SimpleObjectProperty(RunningState.WAITING_DATA)
 
     private var counterListener: CounterListener? = null
 
     private val imageExihibitionSelected = SimpleBooleanProperty(false).apply {
         onChange {
             val imageSelector: (Plotters) -> Boolean = if (this.value) { _ -> true } else { p -> !p.isImage }
-            cmbExihibitionType.items = Plotters.values().filter(imageSelector).toList().observable()
+            cmbExihibitionType.items = Plotters.values().filter(imageSelector).toList().asObservable()
         }
     }
 
@@ -85,7 +85,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbQuantity = combobox {
-                                items = limitsValues.observable()
+                                items = limitsValues.asObservable()
                                 converter = DescriptableConverter(limitsValues)
                                 onAction = EventHandler {
                                     imageExihibitionSelected.value = value.allowedForImages
@@ -97,7 +97,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbSequenceType = combobox {
-                                items = NumberGenerator.values().toList().observable()
+                                items = NumberGenerator.values().toList().asObservable()
                                 converter =
                                         DescriptableConverter(NumberGenerator.values())
                             }
@@ -107,7 +107,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbExihibitionType = combobox {
-                                items = Plotters.values().toList().observable()
+                                items = Plotters.values().toList().asObservable()
                                 converter = DescriptableConverter(Plotters.values())
                                 onAction = EventHandler {
                                     exihibitionTypeChanged()
@@ -125,7 +125,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                                                 { it.info.type },
                                                 { it.info.name }
                                         ))
-                                        .toList().observable()
+                                        .toList().asObservable()
                                 converter = DescriptableConverter(Sorters.values())
                             }
                             label.labelFor = cmbSortingType
@@ -134,7 +134,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             addClass(Styles.controlsFields)
                             label.addClass(Styles.labels)
                             cmbIntervalCycles = combobox {
-                                items = listOf(0L, 1L, 2L, 5L, 10L, 20L, 50L).observable()
+                                items = listOf(0L, 1L, 2L, 5L, 10L, 20L, 50L).asObservable()
                             }
                             label.labelFor = cmbIntervalCycles
                         }
@@ -212,7 +212,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private fun initComponents() {
         initialValues.value = null
         // @formatter:off
-        cmbQuantity         .value      = limitsValues.filter { it.quantity > 50 }.minBy { it.quantity }
+        cmbQuantity         .value      = limitsValues.filter { it.quantity > 50 }.minByOrNull { it.quantity }
         cmbSequenceType     .value      = cmbSequenceType       .items[0]
         cmbExihibitionType  .value      = cmbExihibitionType    .items[0]
         cmbSortingType      .value      = cmbSortingType        .items[0]
@@ -270,6 +270,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                     txfSwaps.text = ""
                     runningState.value = RunningState.CONCLUDED
                 }
+                else                 -> {}
             }
         }
     }
