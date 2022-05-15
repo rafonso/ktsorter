@@ -41,6 +41,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private lateinit var chbSound           : CheckBox
     private lateinit var btnGenerateNumbers : Button
     private lateinit var btnSort            : Button
+    private lateinit var btnLastSequence    : Button
     private lateinit var btnReset           : Button
     private lateinit var btnStop            : Button
     private lateinit var txfComparsions     : TextField
@@ -53,13 +54,15 @@ class MainView : View("KTSorter"), SortListener, Observer {
     private val initialValues: ObjectProperty<IntArray> = SimpleObjectProperty<IntArray>().also { arr ->
         arr.onChange { newValue ->
             runningState.value =
-                    if (newValue == null || newValue.isEmpty()) RunningState.WAITING_DATA
-                    else RunningState.READY_TO_RUN
+                if (newValue == null || newValue.isEmpty()) RunningState.WAITING_DATA
+                else RunningState.READY_TO_RUN
         }
     }
 
+    private val lastValues: ObjectProperty<IntArray> = SimpleObjectProperty()
+
     private val runningState: ObjectProperty<RunningState> =
-            SimpleObjectProperty(RunningState.WAITING_DATA)
+        SimpleObjectProperty(RunningState.WAITING_DATA)
 
     private var counterListener: CounterListener? = null
 
@@ -99,7 +102,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             cmbSequenceType = combobox {
                                 items = NumberGenerator.values().toList().asObservable()
                                 converter =
-                                        DescriptableConverter(NumberGenerator.values())
+                                    DescriptableConverter(NumberGenerator.values())
                             }
                             label.labelFor = cmbSequenceType
                         }
@@ -120,12 +123,12 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             cmbSortingType = combobox {
                                 items = Sorters.values()
-                                        .sortedWith(compareBy(
-                                                { -it.info.performance.ordinal },
-                                                { it.info.type },
-                                                { it.info.name }
-                                        ))
-                                        .toList().asObservable()
+                                    .sortedWith(compareBy(
+                                        { -it.info.performance.ordinal },
+                                        { it.info.type },
+                                        { it.info.name }
+                                    ))
+                                    .toList().asObservable()
                                 converter = DescriptableConverter(Sorters.values())
                             }
                             label.labelFor = cmbSortingType
@@ -143,12 +146,18 @@ class MainView : View("KTSorter"), SortListener, Observer {
                             label.addClass(Styles.labels)
                             chbSound = checkbox {
                                 isDisable = true
+                                isSelected = false
                             }
                         }
                         disableProperty().bind(runningState.isEqualTo(RunningState.RUNNING))
                     }
                     separator {
                         addClass(Styles.pad)
+                    }
+                    btnLastSequence = button("Repeat Last Sequence") {
+                        addClass(Styles.buttons)
+                        onAction = EventHandler { repeatLastValues() }
+                        disableProperty().bind(runningState.isEqualTo(RunningState.RUNNING).or(lastValues.isNull))
                     }
                     btnGenerateNumbers = button("Generate Numbers") {
                         addClass(Styles.buttons)
@@ -231,6 +240,11 @@ class MainView : View("KTSorter"), SortListener, Observer {
         exihibitionTypeChanged()
     }
 
+    private fun repeatLastValues() {
+        initialValues.value = lastValues.value
+        exihibitionTypeChanged()
+    }
+
     private fun exihibitionTypeChanged() {
         if (initialValues.isNotNull.value && cmbExihibitionType.value != null) {
             plotter = cmbExihibitionType.value!!.createPlotter(sortPane, initialValues.value!!, cmbQuantity.value)
@@ -249,6 +263,7 @@ class MainView : View("KTSorter"), SortListener, Observer {
             sorter.subscribe(it)
             it.observers.add(this::invoke)
         }
+        lastValues.value = initialValues.value.clone()
 
         Thread(SorterTask(sorter, plotter), "%s-%tT".format(cmbSortingType.value, Date())).start()
         runningState.value = RunningState.RUNNING
@@ -275,7 +290,6 @@ class MainView : View("KTSorter"), SortListener, Observer {
         }
     }
 
-
     override fun invoke(id: String, value: Any?) {
         Platform.runLater {
             when (id) {
@@ -283,9 +297,9 @@ class MainView : View("KTSorter"), SortListener, Observer {
                 CounterListener.DURATION    -> {
                     val duration = (value as Duration)
                     txfTime.text = "%02d:%02d.%03d".format(
-                            duration.toMinutesPart(),
-                            duration.toSecondsPart(),
-                            duration.toMillisPart()
+                        duration.toMinutesPart(),
+                        duration.toSecondsPart(),
+                        duration.toMillisPart()
                     )
                 }
                 CounterListener.SWAPS       -> txfSwaps.text = (value as Int).toString()
