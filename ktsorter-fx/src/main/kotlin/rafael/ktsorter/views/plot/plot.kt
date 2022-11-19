@@ -36,5 +36,6 @@ internal fun basicPlotPositions(shapes: List<Node>, positions: List<Int>, eventT
             shape.strokeWidth = limits.radius / 2
             shape.strokeDashArray.addAll(0.2, 0.2)
         }
+        else                          -> {}
     }
 }

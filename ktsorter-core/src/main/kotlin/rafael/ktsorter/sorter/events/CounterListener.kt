@@ -1,3 +1,5 @@
+@file:Suppress("Since15")
+
 package rafael.ktsorter.sorter.events
 
 import rafael.ktsorter.util.Observable

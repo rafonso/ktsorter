@@ -1,3 +1,5 @@
+@file:Suppress("Since15")
+
 package rafael.ktsorter.views
 
 import javafx.application.Platform

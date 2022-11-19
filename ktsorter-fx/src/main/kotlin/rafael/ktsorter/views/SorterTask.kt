@@ -25,6 +25,7 @@ class SorterTask(private val sorter: Sorter, private val plotter: Plotter) : Tas
                         plotter.plot(event.values, event.positions, event.type)
                     }
                 }
+                else              -> {}
             }
         }
 
